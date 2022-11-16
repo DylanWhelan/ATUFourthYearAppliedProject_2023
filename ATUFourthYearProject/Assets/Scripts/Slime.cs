@@ -28,10 +28,20 @@ public class Slime : MonoBehaviour
         food -= 1 * scale * Time.deltaTime;
     }
 
+    private void OnMouseOver()
+    {
+        Debug.Log(transform.name);
+    }
+
     public void SetScale(float newScale)
     {
         scale = newScale;
         gameObject.transform.localScale = new Vector3(newScale, newScale, newScale);
+    }
+    
+    public float GetScale()
+    {
+        return scale;
     }
 
     void Die()
