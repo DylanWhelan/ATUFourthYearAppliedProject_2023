@@ -6,7 +6,7 @@ public class Slime : MonoBehaviour
 {
     private float scale = 1f;
 
-    private float food = 30f;
+    private float saturation = 30f;
     // Start is called before the first frame update
     void Start()
     {
@@ -16,16 +16,16 @@ public class Slime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (food < 0)
+        if (saturation < 0)
         {
             Die();
         }
-        else if (food > 100f)
+        else if (saturation > 100f)
         {
             CreateChild();
         }
 
-        food -= 1 * scale * Time.deltaTime;
+        saturation -= 1 * scale * Time.deltaTime;
     }
 
     private void OnMouseOver()
@@ -42,6 +42,11 @@ public class Slime : MonoBehaviour
     public float GetScale()
     {
         return scale;
+    }
+
+    public float GetSaturation()
+    {
+        return saturation;
     }
 
     void Die()

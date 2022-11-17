@@ -58,13 +58,17 @@ public class SpectatorMovement : MonoBehaviour
             {
                 if (target.transform.name.Contains("Slime"))
                 {
-                    traitsDisplay.TextUpdate(target.transform.GetComponent<Slime>());
+                    traitsDisplay.UpdateStoredSlime(target.transform.GetComponent<Slime>());
+                }
+                else
+                {
+                    traitsDisplay.UpdateStoredSlime();
                 }
                 
             }
             else
             {
-                   traitsDisplay.TextUpdate();
+                   traitsDisplay.UpdateStoredSlime();
             }
         }
     }

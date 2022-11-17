@@ -6,21 +6,25 @@ using TMPro;
 public class TraitsDisplay : MonoBehaviour
 {
     public TextMeshProUGUI traitOutput;
-    // Start is called before the first frame update
-    void Start()
-    {
-        TextUpdate();
+
+    Slime slime;
+
+    void Update() {
+        if (slime != null) {
+            string text = "Slime: " + slime.name + "<br>Size: {0:2}<br>Saturation: {1:2}";
+            traitOutput.SetText(text, slime.GetScale(), slime.GetSaturation());
+        }
+        else
+        {
+            traitOutput.text = "No slime selected";
+        }
     }
 
-    public void TextUpdate()
-    {
-        Debug.Log("Was here!");
-        traitOutput.text = "No slime selected";
+    public void UpdateStoredSlime() {
+        this.slime = null;
     }
 
-    public void TextUpdate(Slime slime)
-    {
-        string text = "Slime: " + slime.name + "<br>Size: {0:2}";
-        traitOutput.SetText(text, slime.GetScale());
+    public void UpdateStoredSlime(Slime slime) {
+        this.slime = slime;
     }
 }
