@@ -5,7 +5,6 @@ using UnityEngine;
 public class Food : MonoBehaviour
 {
     private float saturation = 25f;
-    bool wasEaten = false;
 
     public void SetSaturation(float newSaturation)
     {
@@ -17,14 +16,9 @@ public class Food : MonoBehaviour
         return saturation;
     }
 
-    public bool WasEaten() {
-        return wasEaten;
-    }
-
     public float IsEaten()
     {
-        wasEaten = true;
-        Destroy(transform, 3.0f);
+        Destroy(gameObject);
         return saturation;
     }
 }
