@@ -5,6 +5,7 @@ using UnityEngine;
 public class FoodManager : MonoBehaviour
 {
     public List<GameObject> foodList;
+    public int foodCap = 100;
 
     public float spawningInterval;
     float timeElapsed;
@@ -25,7 +26,7 @@ public class FoodManager : MonoBehaviour
     }
 
     void SpawnFoods() {
-        if (GameObject.FindGameObjectsWithTag("Food").Length <= 100)
+        if (GameObject.FindGameObjectsWithTag("Food").Length <= foodCap)
         {
             for (int i = 0; i < 75; i++) {
                 Debug.Log(i);

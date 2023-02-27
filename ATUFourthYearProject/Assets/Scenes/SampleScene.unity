@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   slimeToSpawn: {fileID: 1356717190}
-  numToSpawn: 5
+  numToSpawn: 1000
 --- !u!4 &37211352
 Transform:
   m_ObjectHideFlags: 0
@@ -264,6 +264,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   foodList:
   - {fileID: 1338551872051182345, guid: 6681790b6e61e934c99c6da399648a47, type: 3}
+  foodCap: 1500
   spawningInterval: 10
 --- !u!4 &136155554
 Transform:

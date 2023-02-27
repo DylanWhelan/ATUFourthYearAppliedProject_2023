@@ -10,6 +10,7 @@ public class SlimeSpawner : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        int count = 0;
         for (int i = 0; i < numToSpawn; i++) {
             float xCoord = UnityEngine.Random.Range(-35f, 35f);
             float zCoord = UnityEngine.Random.Range(-35f, 35f);
@@ -18,7 +19,9 @@ public class SlimeSpawner : MonoBehaviour
             spawnedSlime.name = string.Format("Slime_{0:0000}", i);
             spawnedSlime.GetComponent<Slime>().SetScale(UnityEngine.Random.Range(0.5f, 2f));
             spawnedSlime.GetComponent<Slime>().SetSlimeSpawner(this);
+            count++;
         }
+        Debug.Log("Num slimes spawned: " + count);
     }
 
     public void CreateChild(GameObject parentSlime) {
