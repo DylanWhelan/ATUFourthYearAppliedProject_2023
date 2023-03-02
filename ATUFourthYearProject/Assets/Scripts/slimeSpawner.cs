@@ -15,7 +15,7 @@ public class SlimeSpawner : MonoBehaviour
             float xCoord = UnityEngine.Random.Range(-35f, 35f);
             float zCoord = UnityEngine.Random.Range(-35f, 35f);
             float orientation = UnityEngine.Random.Range(0f, 359f);
-            GameObject spawnedSlime = Instantiate(slimeToSpawn, new Vector3(xCoord, 3, zCoord), Quaternion.Euler(0f, orientation, 0f));
+            GameObject spawnedSlime = Instantiate(slimeToSpawn, new Vector3(xCoord, 1, zCoord), Quaternion.Euler(0f, orientation, 0f));
             spawnedSlime.name = string.Format("Slime_{0:0000}", i);
             spawnedSlime.GetComponent<Slime>().SetScale(UnityEngine.Random.Range(0.5f, 2f));
             spawnedSlime.GetComponent<Slime>().SetSlimeSpawner(this);
@@ -29,7 +29,7 @@ public class SlimeSpawner : MonoBehaviour
         float zCoord = parentSlime.transform.position.z + UnityEngine.Random.Range(-2, 2);
         float orientation = UnityEngine.Random.Range(0f, 359f);
 
-        GameObject spawnedSlime = Instantiate(slimeToSpawn, new Vector3(xCoord, 3, zCoord), Quaternion.Euler(0f, orientation, 0f));
+        GameObject spawnedSlime = Instantiate(slimeToSpawn, new Vector3(xCoord, 1, zCoord), Quaternion.Euler(0f, orientation, 0f));
         spawnedSlime.name = parentSlime.name + parentSlime.GetComponent<Slime>().GetNumChildren();
         spawnedSlime.GetComponent<Slime>().SetScale(Mathf.Clamp(parentSlime.GetComponent<Slime>().GetScale() + UnityEngine.Random.Range(-0.1f, 0.1f), 0.5f, 2f));
         spawnedSlime.GetComponent<Slime>().SetSlimeSpawner(this);

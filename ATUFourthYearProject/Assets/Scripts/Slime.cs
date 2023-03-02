@@ -10,13 +10,19 @@ public class Slime : MonoBehaviour
 
     private int numChildren;
 
+    private float[] inputsToNeural = new float [5];
+    private float[] outputsOfNeural = new float [2];
+
     private SlimeSpawner slimeSpawner;
+
+    private NeuralNetwork neuralNetwork;
 
     private GameObject closestFood;
     // Start is called before the first frame update
     void Start()
     {
         numChildren = 0;   
+        neuralNetwork = new NeuralNetwork(new int [] {5, 3, 2});
     }
 
     // Update is called once per frame
@@ -31,9 +37,9 @@ public class Slime : MonoBehaviour
             }
         }
 
-        if (closestFood != null) {
+        /*if (closestFood != null) {
             Jump(closestFood);
-        }
+        }*/
 
         if (saturation < 0)
         {
@@ -43,6 +49,27 @@ public class Slime : MonoBehaviour
         {
             CreateChild();
         }
+        // Represents slimes current hunger
+        inputsToNeural[0] = saturation / 50f - 1f;
+        // Represents slimes size
+        inputsToNeural[1] = scale - 1f;
+        if (closestFood == null) {
+            // Represents saturation of food
+            inputsToNeural[2] = -1f;
+            // Represents angle to food in pi radians
+            inputsToNeural[3] = -1f;
+            // represents distance to food
+            inputsToNeural[4] = 1f;
+        }
+        else {
+            inputsToNeural[2] = 1f;
+            inputsToNeural[3] = Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position));
+            inputsToNeural[4] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
+        }
+
+        outputsOfNeural = neuralNetwork.FeedForward(inputsToNeural);
+        Rotate(outputsOfNeural[0]);
+        MoveForward(outputsOfNeural[1]);
     }
 
     public void SetSlimeSpawner(SlimeSpawner slimeSpawner) {
@@ -56,6 +83,15 @@ public class Slime : MonoBehaviour
         rb.AddForce(transform.forward * Time.deltaTime, ForceMode.Impulse);
     }
 
+    void Rotate(float piRadian) {
+        transform.Rotate(0, piRadian * 36 * Time.deltaTime, 0);
+    }
+
+    void MoveForward(float movementModifier) {
+        if (movementModifier < 0) return;
+        Rigidbody rb = GetComponent<Rigidbody>();
+        rb.AddForce(transform.forward * movementModifier *  Time.deltaTime, ForceMode.Impulse);
+    }
 
     GameObject NearestFood(GameObject [] foods)
     {

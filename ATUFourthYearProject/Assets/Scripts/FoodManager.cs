@@ -33,7 +33,7 @@ public class FoodManager : MonoBehaviour
                 float xCoord = UnityEngine.Random.Range(-35f, 35f);
                 float zCoord = UnityEngine.Random.Range(-35f, 35f);
                 float orientation = UnityEngine.Random.Range(0f, 359f);
-                GameObject spawnedFood = Instantiate(foodList[0], new Vector3(xCoord, 3, zCoord), Quaternion.Euler(0f, orientation, 0f));
+                GameObject spawnedFood = Instantiate(foodList[0], new Vector3(xCoord, 0.75f, zCoord), Quaternion.Euler(0f, orientation, 0f));
                 spawnedFood.GetComponent<Food>().SetSaturation(25); 
             }
         }
