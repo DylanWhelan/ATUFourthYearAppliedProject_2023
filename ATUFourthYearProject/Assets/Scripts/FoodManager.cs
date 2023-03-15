@@ -28,7 +28,7 @@ public class FoodManager : MonoBehaviour
     void SpawnFoods() {
         if (GameObject.FindGameObjectsWithTag("Food").Length <= foodCap)
         {
-            for (int i = 0; i < 75; i++) {
+            for (int i = 0; i < 275; i++) {
                 Debug.Log(i);
                 float xCoord = UnityEngine.Random.Range(-35f, 35f);
                 float zCoord = UnityEngine.Random.Range(-35f, 35f);

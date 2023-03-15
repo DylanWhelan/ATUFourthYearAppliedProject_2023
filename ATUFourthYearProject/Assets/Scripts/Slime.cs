@@ -10,8 +10,8 @@ public class Slime : MonoBehaviour
 
     private int numChildren;
 
-    private float[] inputsToNeural = new float [5];
-    private float[] outputsOfNeural = new float [2];
+    [SerializeField] private float[] inputsToNeural = new float [5];
+    [SerializeField] private float[] outputsOfNeural = new float [2];
 
     private SlimeSpawner slimeSpawner;
 
@@ -22,7 +22,7 @@ public class Slime : MonoBehaviour
     void Start()
     {
         numChildren = 0;   
-        neuralNetwork = new NeuralNetwork(new int [] {5, 3, 2});
+        neuralNetwork = new NeuralNetwork(new int [] {5, 4, 4, 2});
     }
 
     // Update is called once per frame
@@ -63,7 +63,7 @@ public class Slime : MonoBehaviour
         }
         else {
             inputsToNeural[2] = 1f;
-            inputsToNeural[3] = Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position));
+            inputsToNeural[3] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position))) - 1;
             inputsToNeural[4] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
         }
 
