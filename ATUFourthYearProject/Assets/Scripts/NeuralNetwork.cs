@@ -8,8 +8,6 @@ public class NeuralNetwork
     private float[][] neurons;//neurons    
     private float[][] biases;//biasses    
     private float[][][] weights;//weights    
-    private int[] activations;//layers
-    public float fitness = 0;//fitness
     public NeuralNetwork(int[] layers)
     {
         this.layers = new int[layers.Length];
@@ -72,7 +70,7 @@ public class NeuralNetwork
     }
 
 
-    public float activate(float value)
+    public float Activate(float value)
     {
         return (float)Math.Tanh(value);
     }
@@ -93,7 +91,7 @@ public class NeuralNetwork
                 {                    
                     summedValue += weights[i - 1][j][k] * neurons[i - 1][k];      
                 }                
-                neurons[i][j] = activate(summedValue + biases[i][j]);            
+                neurons[i][j] = Activate(summedValue + biases[i][j]);            
             }        
         }        
         return neurons[neurons.Length - 1];    
