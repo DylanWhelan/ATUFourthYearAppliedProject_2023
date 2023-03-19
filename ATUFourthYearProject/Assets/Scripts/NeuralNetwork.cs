@@ -82,8 +82,7 @@ public class NeuralNetwork
             neurons[0][i] = inputs[i];        
         }        
         for (int i = 1; i < layers.Length; i++)        
-        {            
-            int layer = i - 1;            
+        {                    
             for (int j = 0; j < neurons[i].Length; j++)            
             {                
                 float summedValue = 0f;               
