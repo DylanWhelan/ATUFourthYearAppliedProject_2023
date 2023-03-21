@@ -84,13 +84,14 @@ public class Slime : MonoBehaviour
     }
 
     void Rotate(float piRadian) {
-        transform.Rotate(0, piRadian * 36 * Time.deltaTime, 0);
+        //transform.Rotate(0, 0, piRadian * 36 * Time.deltaTime);
+        transform.Rotate(transform.up, piRadian);
     }
 
     void MoveForward(float movementModifier) {
         if (movementModifier < 0) return;
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * movementModifier *  Time.deltaTime, ForceMode.Impulse);
+        rb.AddForce(transform.forward * movementModifier * 100 *  Time.deltaTime);
     }
 
     GameObject NearestFood(GameObject [] foods)

@@ -235,7 +235,7 @@ Rigidbody:
   m_UseGravity: 1
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 0
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!136 &1896493574195950913
 CapsuleCollider:
@@ -263,6 +263,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc4dc3b23ed7d1141a10edd801d106c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  inputsToNeural:
+  - 0
+  - 0
+  - 0
+  - 0
+  - 0
+  outputsOfNeural:
+  - 0
+  - 0
 --- !u!1 &6683666098018840159
 GameObject:
   m_ObjectHideFlags: 0
