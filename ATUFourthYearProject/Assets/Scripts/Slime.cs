@@ -13,8 +13,6 @@ public class Slime : MonoBehaviour
     [SerializeField] private float[] inputsToNeural = new float [5];
     [SerializeField] private float[] outputsOfNeural = new float [2];
 
-    private SlimeSpawner slimeSpawner;
-
     private NeuralNetwork neuralNetwork;
 
     private GameObject closestFood;
@@ -72,26 +70,14 @@ public class Slime : MonoBehaviour
         MoveForward(outputsOfNeural[1]);
     }
 
-    public void SetSlimeSpawner(SlimeSpawner slimeSpawner) {
-        this.slimeSpawner = slimeSpawner;
-    }
-
-    void Jump(GameObject target)
-    {
-        Rigidbody rb = GetComponent<Rigidbody>();
-        transform.LookAt(target.transform);
-        rb.AddForce(transform.forward * Time.deltaTime, ForceMode.Impulse);
-    }
-
     void Rotate(float piRadian) {
-        //transform.Rotate(0, 0, piRadian * 36 * Time.deltaTime);
         transform.Rotate(transform.up, piRadian);
     }
 
     void MoveForward(float movementModifier) {
         if (movementModifier < 0) return;
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * movementModifier * 100 *  Time.deltaTime);
+        rb.AddForce(transform.forward * movementModifier * 1 *  Time.deltaTime);
     }
 
     GameObject NearestFood(GameObject [] foods)
@@ -147,7 +133,7 @@ public class Slime : MonoBehaviour
         Debug.Log(name + " has eaten enough to have a child!");
         saturation = 50f * scale;
         numChildren += 1;
-        slimeSpawner.CreateChild(gameObject);
+        SlimeSpawner.Instance().CreateSlime(gameObject);
     }
     
     public int GetNumChildren()
