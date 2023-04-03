@@ -7,7 +7,8 @@ public class NeuralNetwork
     private int[] layers;//layers    
     private float[][] neurons;//neurons    
     private float[][] biases;//biasses    
-    private float[][][] weights;//weights    
+    private float[][][] weights;//weights
+    private NeuralNetworkSerializable neuralNetworkSerializable;
     public NeuralNetwork(int[] layers)
     {
         this.layers = new int[layers.Length];
@@ -18,6 +19,15 @@ public class NeuralNetwork
         InitNeurons();
         InitBiases();
         InitWeights();
+
+        neuralNetworkSerializable = new NeuralNetworkSerializable(layers, biases, weights);
+    }
+    public NeuralNetwork(NeuralNetworkSerializable neuralNetworkSerializable)
+    {
+        layers = neuralNetworkSerializable.GetLayers();
+        InitNeurons();
+        biases = neuralNetworkSerializable.GetBiases();
+        weights = neuralNetworkSerializable.GetWeights();
     }
 
     //create empty storage array for the neurons in the network.
@@ -50,6 +60,7 @@ public class NeuralNetwork
     //initializes random array for the weights being held in the network.
     private void InitWeights()
     {
+        int numWeights = 0;
         List<float[][]> weightsList = new List<float[][]>();
         for (int i = 1; i < layers.Length; i++)
         {
@@ -61,12 +72,14 @@ public class NeuralNetwork
                 for (int k = 0; k < neuronsInPreviousLayer; k++)
                 {
                     neuronWeights[k] = UnityEngine.Random.Range(-1f, 1f);
+                    numWeights++;
                 }
                 layerWeightsList.Add(neuronWeights);
             }
             weightsList.Add(layerWeightsList.ToArray());
         }
         weights = weightsList.ToArray();
+        Debug.Log("Number of Weights in Neural Net" + numWeights);
     }
 
 
@@ -94,5 +107,10 @@ public class NeuralNetwork
             }        
         }        
         return neurons[neurons.Length - 1];    
+    }
+
+    public NeuralNetworkSerializable GetNeuralNetworkSerializable()
+    {
+        return neuralNetworkSerializable;
     }
 }

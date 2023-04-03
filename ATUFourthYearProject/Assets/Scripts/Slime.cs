@@ -105,7 +105,16 @@ public class Slime : MonoBehaviour
             closestFood = null;
         }
     }
+
+    public NeuralNetworkSerializable GetNeuralNetworkSerializable()
+    {
+        return neuralNetwork.GetNeuralNetworkSerializable();
+    }
     
+    public void SetNeuralNetwork(NeuralNetworkSerializable neuralNetworkSerializable)
+    {
+        neuralNetwork = new NeuralNetwork(neuralNetworkSerializable);
+    }
 
     public void SetScale(float newScale)
     {

@@ -8,14 +8,18 @@ public class SimulationManager : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        if (instance != null) {
+        if (instance != null)
+        {
             Destroy(gameObject);
-            return;
         }
 
-        // Set singleton instance and set DontDestroyOnLoad, to ensure cross scene persistance
         instance = this;
-        DontDestroyOnLoad(gameObject);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
     }
 
     public SimulationManager GetInstance()
