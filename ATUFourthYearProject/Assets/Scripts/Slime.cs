@@ -114,25 +114,30 @@ public class Slime : MonoBehaviour
         }
     }
 
-    public NeuralNetworkSerializable GetNeuralNetworkSerializable()
-    {
-        return neuralNetwork.GetNeuralNetworkSerializable();
-    }
 
+    public NeuralNetwork GetNeuralNetwork()
+    {
+        return neuralNetwork;
+    }
     public void SetNeuralNetwork()
     {
         neuralNetwork = new NeuralNetwork(new int[] { 5, 4, 4, 2 });
     }
-    
-    public void SetNeuralNetwork(NeuralNetworkSerializable neuralNetworkSerializable)
+
+    public void SetNeuralNetwork(NeuralNetwork neuralNetwork)
     {
-        neuralNetwork = new NeuralNetwork(neuralNetworkSerializable);
+        this.neuralNetwork = new NeuralNetwork(neuralNetwork);
     }
 
     public void SetScale(float newScale)
     {
         scale = newScale;
         gameObject.transform.localScale = new Vector3(newScale, newScale, newScale);
+    }
+
+    public float GetScale()
+    {
+        return scale;
     }
 
     public void SetSpeed(float newSpeed)
@@ -160,13 +165,6 @@ public class Slime : MonoBehaviour
         saturation = 50f * scale;
         numChildren += 1;
         SlimeSpawner.Instance().CreateSlime(gameObject);
-        try
-        {
-            
-        } catch (System.NullReferenceException) 
-        {
-            Debug.LogError(name);
-        }
     }
     
     public int GetNumChildren()

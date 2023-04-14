@@ -41,8 +41,8 @@ public void CreateSlime(GameObject parentSlime) {
     spawnedSlime.name = parentSlime.name + parentSlime.GetComponent<Slime>().GetNumChildren();
     spawnedSlime.GetComponent<Slime>().SetScale(Mathf.Clamp(parentSlime.GetComponent<Slime>().GetScale() + UnityEngine.Random.Range(-0.1f, 0.1f), 0.5f, 2f));
 
-    NeuralNetworkSerializable neuralNetworkSerializable = parentSlime.GetComponent<Slime>().GetNeuralNetworkSerializable();
-    spawnedSlime.GetComponent<Slime>().SetNeuralNetwork(neuralNetworkSerializable);
+    NeuralNetwork neuralNetwork = parentSlime.GetComponent<Slime>().GetNeuralNetwork();
+    spawnedSlime.GetComponent<Slime>().SetNeuralNetwork(neuralNetwork);
 }
 
 public void CreateSlime(int i) {

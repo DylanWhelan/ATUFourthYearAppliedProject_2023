@@ -44,12 +44,28 @@ public class SpectatorMovement : MonoBehaviour
         Vector3 movementDirection = transform.forward * verticalMovement + transform.right * horizontalMovement + transform.up * y;
         transform.position += movementDirection * speed * speedMultiplier * Time.deltaTime;
 
-        rotX += Input.GetAxis("Mouse X") * 1;
-        rotY += Input.GetAxis("Mouse Y") * 1;
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (Cursor.lockState == CursorLockMode.Locked)
+            {
+                Cursor.lockState = CursorLockMode.None;
+            }
+            else
+            {
+                Cursor.lockState = CursorLockMode.Locked;
+            }
+        }
 
-        rotY = Mathf.Clamp(rotY, -45, 45);
+        if (Cursor.lockState == CursorLockMode.Locked)
+        {
+            rotX += Input.GetAxis("Mouse X") * 1;
+            rotY += Input.GetAxis("Mouse Y") * 1;
 
-        transform.rotation = Quaternion.Euler(-rotY, rotX, 0);
+            rotY = Mathf.Clamp(rotY, -45, 45);
+
+            transform.rotation = Quaternion.Euler(-rotY, rotX, 0);
+        }
+        
 
         if (Input.GetMouseButtonDown(0))
         {
@@ -72,6 +88,4 @@ public class SpectatorMovement : MonoBehaviour
             }
         }
     }
-
-    
 }

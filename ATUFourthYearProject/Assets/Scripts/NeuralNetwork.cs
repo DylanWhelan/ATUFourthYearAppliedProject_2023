@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System;
+using Newtonsoft.Json;
 using UnityEngine;
 
 public class NeuralNetwork
 {
-    private int[] layers;//layers    
+    [JsonProperty] private int[] layers;//layers    
     private float[][] neurons;//neurons    
-    private float[][] biases;//biasses    
-    private float[][][] weights;//weights
-    private NeuralNetworkSerializable neuralNetworkSerializable;
+    [JsonProperty] private float[][] biases;//biasses    
+    [JsonProperty] private float[][][] weights;//weights
     public NeuralNetwork(int[] layers)
     {
         this.layers = new int[layers.Length];
@@ -20,17 +20,47 @@ public class NeuralNetwork
         InitBiases();
         InitWeights();
         Mutate(10, 0.02f);
-
-        neuralNetworkSerializable = new NeuralNetworkSerializable(layers, biases, weights);
     }
-    public NeuralNetwork(NeuralNetworkSerializable neuralNetworkSerializable)
-    {
-        layers = neuralNetworkSerializable.GetLayers();
-        InitNeurons();
-        biases = neuralNetworkSerializable.GetBiases();
-        weights = neuralNetworkSerializable.GetWeights();
 
-        neuralNetworkSerializable = new NeuralNetworkSerializable(layers, biases, weights);
+    public NeuralNetwork(NeuralNetwork otherNetwork)
+    {
+        // Copy layers
+        this.layers = new int[otherNetwork.layers.Length];
+        Array.Copy(otherNetwork.layers, this.layers, otherNetwork.layers.Length);
+
+        // Copy neurons
+        this.neurons = new float[otherNetwork.neurons.Length][];
+        for (int i = 0; i < otherNetwork.neurons.Length; i++)
+        {
+            this.neurons[i] = new float[otherNetwork.neurons[i].Length];
+            Array.Copy(otherNetwork.neurons[i], this.neurons[i], otherNetwork.neurons[i].Length);
+        }
+
+        // Copy biases
+        this.biases = new float[otherNetwork.biases.Length][];
+        for (int i = 0; i < otherNetwork.biases.Length; i++)
+        {
+            this.biases[i] = new float[otherNetwork.biases[i].Length];
+            Array.Copy(otherNetwork.biases[i], this.biases[i], otherNetwork.biases[i].Length);
+        }
+
+        // Copy weights
+        this.weights = new float[otherNetwork.weights.Length][][];
+        for (int i = 0; i < otherNetwork.weights.Length; i++)
+        {
+            this.weights[i] = new float[otherNetwork.weights[i].Length][];
+            for (int j = 0; j < otherNetwork.weights[i].Length; j++)
+            {
+                this.weights[i][j] = new float[otherNetwork.weights[i][j].Length];
+                Array.Copy(otherNetwork.weights[i][j], this.weights[i][j], otherNetwork.weights[i][j].Length);
+            }
+        }
+
+        Mutate(10, 0.02f);
+
+        string jsoned = JsonConvert.SerializeObject(this);
+        Debug.Log("We got to here!");
+        Debug.Log(jsoned);
     }
 
     //create empty storage array for the neurons in the network.
@@ -133,10 +163,5 @@ public class NeuralNetwork
                 }
             }
         }
-    }
-
-    public NeuralNetworkSerializable GetNeuralNetworkSerializable()
-    {
-        return neuralNetworkSerializable;
     }
 }
