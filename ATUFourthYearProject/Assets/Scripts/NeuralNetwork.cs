@@ -19,6 +19,7 @@ public class NeuralNetwork
         InitNeurons();
         InitBiases();
         InitWeights();
+        Mutate(10, 0.02f);
 
         neuralNetworkSerializable = new NeuralNetworkSerializable(layers, biases, weights);
     }
@@ -28,6 +29,8 @@ public class NeuralNetwork
         InitNeurons();
         biases = neuralNetworkSerializable.GetBiases();
         weights = neuralNetworkSerializable.GetWeights();
+
+        neuralNetworkSerializable = new NeuralNetworkSerializable(layers, biases, weights);
     }
 
     //create empty storage array for the neurons in the network.
@@ -107,6 +110,29 @@ public class NeuralNetwork
             }        
         }        
         return neurons[neurons.Length - 1];    
+    }
+
+    public void Mutate(int chance, float val)
+    {
+        for (int i = 0; i < biases.Length; i++)
+        {
+            for (int j = 0; j < biases[i].Length; j++)
+            {
+                biases[i][j] = (UnityEngine.Random.Range(0f, chance) <= 5) ? biases[i][j] += UnityEngine.Random.Range(-val, val) : biases[i][j];
+            }
+        }
+
+        for (int i = 0; i < weights.Length; i++)
+        {
+            for (int j = 0; j < weights[i].Length; j++)
+            {
+                for (int k = 0; k < weights[i][j].Length; k++)
+                {
+                    weights[i][j][k] = (UnityEngine.Random.Range(0f, chance) <= 5) ? weights[i][j][k] += UnityEngine.Random.Range(-val, val) : weights[i][j][k];
+
+                }
+            }
+        }
     }
 
     public NeuralNetworkSerializable GetNeuralNetworkSerializable()

@@ -90,7 +90,7 @@ public class NeuralNetworkSerializable
                     }
                     catch(System.IndexOutOfRangeException)
                     {
-                        Debug.Log("Exception Occurred when trying to access array index: " + (arrayIndex-1));
+                        Debug.LogError("Exception Occurred when trying to access array index: " + (arrayIndex-1));
                     }
                 }
                 layerWeightsList.Add(neuronWeights);
