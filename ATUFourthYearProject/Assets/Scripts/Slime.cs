@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Slime : MonoBehaviour
 {
-    private float scale = 1f;
-    private float speed = 1f;
+    private float scale;
+    private float speed;
+    private int generation;
 
     private float saturation = 30f;
 
@@ -14,6 +15,7 @@ public class Slime : MonoBehaviour
     [SerializeField] private float[] inputsToNeural = new float [5];
     [SerializeField] private float[] outputsOfNeural = new float [2];
 
+    private SlimeInfo slimeInfo;
     private NeuralNetwork neuralNetwork;
 
     private GameObject closestFood;
@@ -114,14 +116,28 @@ public class Slime : MonoBehaviour
         }
     }
 
+    public void init(float slimeScale, float slimeSpeed)
+    {
+        SetScale(slimeScale);
+        this.speed = slimeSpeed;
+        this.generation = 0;
+        this.slimeInfo = new SlimeInfo(name, scale, speed);
+        this.neuralNetwork = new NeuralNetwork(new int[] { 5, 4, 4, 2 });
+    }
+
+    public void init(float slimeScale, float slimeSpeed, int generation, SlimeInfo parentSlime, NeuralNetwork neuralNetwork)
+    {
+        SetScale(slimeScale);
+        this.speed = slimeSpeed;
+        this.generation = generation;
+        this.slimeInfo = new SlimeInfo(name, scale, speed, generation, parentSlime);
+        this.neuralNetwork = new NeuralNetwork(neuralNetwork);
+    }
+
 
     public NeuralNetwork GetNeuralNetwork()
     {
         return neuralNetwork;
-    }
-    public void SetNeuralNetwork()
-    {
-        neuralNetwork = new NeuralNetwork(new int[] { 5, 4, 4, 2 });
     }
 
     public void SetNeuralNetwork(NeuralNetwork neuralNetwork)
@@ -129,7 +145,12 @@ public class Slime : MonoBehaviour
         this.neuralNetwork = new NeuralNetwork(neuralNetwork);
     }
 
-    public void SetScale(float newScale)
+    public SlimeInfo GetSlimeInfo()
+    {
+        return slimeInfo;
+    }
+
+    private void SetScale(float newScale)
     {
         scale = newScale;
         gameObject.transform.localScale = new Vector3(newScale, newScale, newScale);
@@ -149,6 +170,11 @@ public class Slime : MonoBehaviour
     {
         return speed;
     }
+
+    public int GetGeneration()
+    {
+        return generation;
+    }
     public float GetSaturation()
     {
         return saturation;
@@ -164,7 +190,7 @@ public class Slime : MonoBehaviour
         Debug.Log(name + " has eaten enough to have a child!"); 
         saturation = 50f * scale;
         numChildren += 1;
-        SlimeSpawner.Instance().CreateSlime(gameObject);
+        SlimeManager.Instance().CreateSlime(gameObject);
     }
     
     public int GetNumChildren()

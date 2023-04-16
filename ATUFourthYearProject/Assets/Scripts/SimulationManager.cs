@@ -14,6 +14,7 @@ public class SimulationManager : MonoBehaviour
         }
 
         instance = this;
+        Debug.Log(Application.persistentDataPath);
     }
 
     // Update is called once per frame

@@ -4,20 +4,27 @@ using UnityEngine;
 
 public class SlimeInfo
 {
-    private string slimeName { get; set; }
-    private float slimeSize { get; set; }
+    public string slimeName { get; }
+    public float slimeSize { get; }
+    public float slimeSpeed { get; }
+    public int slimeGeneration { get; }
     private SlimeInfo parentSlime { get; }
 
-    public SlimeInfo(string slimeName, float slimeSize)
+    public SlimeInfo(string slimeName, float slimeSize, float slimeSpeed)
     {
         this.slimeName = slimeName;
         this.slimeSize = slimeSize;
+        this.slimeSpeed = slimeSpeed;
+        this.slimeGeneration = 0;
+        this.parentSlime = null;
     }
 
-    public SlimeInfo(string slimeName, float slimeSize, SlimeInfo parentSlime)
+    public SlimeInfo(string slimeName, float slimeSize, float slimeSpeed, int slimeGeneration, SlimeInfo parentSlime)
     {
         this.slimeName = slimeName;
         this.slimeSize = slimeSize;
+        this.parentSlime = parentSlime;
+        this.slimeGeneration = slimeGeneration;
         this.parentSlime = parentSlime;
     }
 }
