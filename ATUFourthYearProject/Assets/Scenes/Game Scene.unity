@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 37211352}
   - component: {fileID: 37211353}
   m_Layer: 0
-  m_Name: SpawningHandler
+  m_Name: SlimeManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -153,7 +153,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &37211353
 MonoBehaviour:
@@ -167,8 +167,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 92c185a2221c7d943841439b6d0c06b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _slimeToSpawn: {fileID: 6013297127092347252, guid: dc63b65a2a86d5d488d9c471ab8fbeb4, type: 3}
   _numToSpawn: 1000
+  _slimePrefab: {fileID: 6013297127092347252, guid: dc63b65a2a86d5d488d9c471ab8fbeb4, type: 3}
 --- !u!1 &48672900
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +201,7 @@ Transform:
   m_Children:
   - {fileID: 963194228}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &48672902
 MonoBehaviour:
@@ -262,11 +262,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e7400f8fd6145804fb1fd301dcec6c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _foodList:
-  - {fileID: 1338551872051182345, guid: 6681790b6e61e934c99c6da399648a47, type: 3}
+  _foodPrefab: {fileID: 1338551872051182345, guid: 6681790b6e61e934c99c6da399648a47, type: 3}
   _foodCap: 100
-  _foodPerInterval: 0
-  _spawningInterval: 0
+  _foodPerInterval: 100
+  _spawningInterval: 15
 --- !u!4 &136155554
 Transform:
   m_ObjectHideFlags: 0
@@ -280,7 +279,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &155169190
 GameObject:
@@ -535,7 +534,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &481781279
 GameObject:
@@ -1623,7 +1622,7 @@ RectTransform:
   - {fileID: 841970475}
   - {fileID: 2101355845}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1740,7 +1739,7 @@ Transform:
   - {fileID: 1421724646}
   - {fileID: 481781280}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1370524476
 GameObject:

@@ -18,7 +18,7 @@ public class Food : MonoBehaviour
 
     public float IsEaten()
     {
-        FoodManager.GetInstance().DeactivateFood(gameObject);
+        FoodManager.Instance().DeactivateFood(gameObject);
         return _saturation;
     }
 }

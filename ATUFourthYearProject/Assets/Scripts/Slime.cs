@@ -181,7 +181,7 @@ public class Slime : MonoBehaviour
 
     void Die()
     {
-        Destroy(gameObject);
+        SlimeManager.Instance().DeactivateSlime(gameObject);
     }
 
     void CreateChild()

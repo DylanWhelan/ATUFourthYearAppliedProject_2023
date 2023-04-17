@@ -23,6 +23,8 @@ public class FoodManager : MonoBehaviour
         }
         _instance = this;
 
+        _foodPool = new ObjectPool(_foodPrefab);
+
         SpawnFoods();
     }
 
@@ -37,24 +39,23 @@ public class FoodManager : MonoBehaviour
         }
     }
 
-    static public FoodManager GetInstance()
+    static public FoodManager Instance()
     {
         return _instance;
     }
 
     void SpawnFoods()
     {
-        Debug.Log(_foodPool.Count());
+        Debug.Log(_foodPool.Count);
         for (int i = 0; i < _foodPerInterval; i++)
         {
-            if (_foodPool.Count() < _foodCap)
+            if (_foodPool.Count < _foodCap)
             {
                 float xCoord = UnityEngine.Random.Range(-35f, 35f);
                 float zCoord = UnityEngine.Random.Range(-35f, 35f);
                 float orientation = UnityEngine.Random.Range(0f, 359f);
 
-                GameObject spawnedFood;
-                spawnedFood = _foodPool.GetPooledObject();
+                GameObject spawnedFood = _foodPool.GetPooledObject();
                 spawnedFood.transform.position = new Vector3(xCoord, 0.75f, zCoord);
                 spawnedFood.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
 

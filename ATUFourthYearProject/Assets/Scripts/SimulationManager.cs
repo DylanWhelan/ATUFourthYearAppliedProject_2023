@@ -23,7 +23,7 @@ public class SimulationManager : MonoBehaviour
         
     }
 
-    public SimulationManager GetInstance()
+    public SimulationManager Instance()
     {
         return _instance;
     }
