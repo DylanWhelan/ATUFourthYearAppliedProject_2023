@@ -139,7 +139,7 @@ public class NeuralNetwork
                 _neurons[i][j] = Activate(summedValue + _biases[i][j]);            
             }        
         }        
-        return _neurons[_neurons.Length^1];    
+        return _neurons[_neurons.Length - 1];    
     }
 
     public void Mutate(int chance, float val)

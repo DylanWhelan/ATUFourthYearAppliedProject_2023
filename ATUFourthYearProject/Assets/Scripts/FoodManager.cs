@@ -4,14 +4,25 @@ using UnityEngine;
 
 public class FoodManager : MonoBehaviour
 {
-    public List<GameObject> _foodList;
-    public int _foodCap = 100;
+    static private FoodManager _instance;
 
-    public float _spawningInterval;
-    float _timeElapsed;
+    [SerializeField] private GameObject _foodPrefab;
+    [SerializeField] private int _foodCap;
+    [SerializeField] private int _foodPerInterval;
+
+    [SerializeField] private float _spawningInterval;
+    private float _timeElapsed;
+
+    [SerializeField] private ObjectPool _foodPool;
 
     void Start()
     {
+        if (_instance != null)
+        {
+            Destroy(gameObject);
+        }
+        _instance = this;
+
         SpawnFoods();
     }
 
@@ -19,23 +30,42 @@ public class FoodManager : MonoBehaviour
     void Update()
     {
         _timeElapsed += Time.deltaTime;
-        if (_timeElapsed >= _spawningInterval) {
+        if (_timeElapsed >= _spawningInterval)
+        {
             _timeElapsed = 0f;
             SpawnFoods();
         }
     }
 
-    void SpawnFoods() {
-        if (GameObject.FindGameObjectsWithTag("Food").Length <= _foodCap)
+    static public FoodManager GetInstance()
+    {
+        return _instance;
+    }
+
+    void SpawnFoods()
+    {
+        Debug.Log(_foodPool.Count());
+        for (int i = 0; i < _foodPerInterval; i++)
         {
-            for (int i = 0; i < 275; i++) {
-                Debug.Log(i);
+            if (_foodPool.Count() < _foodCap)
+            {
                 float xCoord = UnityEngine.Random.Range(-35f, 35f);
                 float zCoord = UnityEngine.Random.Range(-35f, 35f);
                 float orientation = UnityEngine.Random.Range(0f, 359f);
-                GameObject spawnedFood = Instantiate(_foodList[0], new Vector3(xCoord, 0.75f, zCoord), Quaternion.Euler(0f, orientation, 0f));
-                spawnedFood.GetComponent<Food>().SetSaturation(25); 
+
+                GameObject spawnedFood;
+                spawnedFood = _foodPool.GetPooledObject();
+                spawnedFood.transform.position = new Vector3(xCoord, 0.75f, zCoord);
+                spawnedFood.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
+
+                spawnedFood.GetComponent<Food>().SetSaturation(25);
             }
+            
         }
+    }
+
+    public void DeactivateFood(GameObject objectToDeactivate)
+    {
+        _foodPool.DeactivateObject(objectToDeactivate);
     }
 }
