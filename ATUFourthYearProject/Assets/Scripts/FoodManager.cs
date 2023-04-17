@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class FoodManager : MonoBehaviour
 {
-    public List<GameObject> foodList;
-    public int foodCap = 100;
+    public List<GameObject> _foodList;
+    public int _foodCap = 100;
 
-    public float spawningInterval;
-    float timeElapsed;
+    public float _spawningInterval;
+    float _timeElapsed;
 
     void Start()
     {
@@ -18,22 +18,22 @@ public class FoodManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        timeElapsed += Time.deltaTime;
-        if (timeElapsed >= spawningInterval) {
-            timeElapsed = 0f;
+        _timeElapsed += Time.deltaTime;
+        if (_timeElapsed >= _spawningInterval) {
+            _timeElapsed = 0f;
             SpawnFoods();
         }
     }
 
     void SpawnFoods() {
-        if (GameObject.FindGameObjectsWithTag("Food").Length <= foodCap)
+        if (GameObject.FindGameObjectsWithTag("Food").Length <= _foodCap)
         {
             for (int i = 0; i < 275; i++) {
                 Debug.Log(i);
                 float xCoord = UnityEngine.Random.Range(-35f, 35f);
                 float zCoord = UnityEngine.Random.Range(-35f, 35f);
                 float orientation = UnityEngine.Random.Range(0f, 359f);
-                GameObject spawnedFood = Instantiate(foodList[0], new Vector3(xCoord, 0.75f, zCoord), Quaternion.Euler(0f, orientation, 0f));
+                GameObject spawnedFood = Instantiate(_foodList[0], new Vector3(xCoord, 0.75f, zCoord), Quaternion.Euler(0f, orientation, 0f));
                 spawnedFood.GetComponent<Food>().SetSaturation(25); 
             }
         }

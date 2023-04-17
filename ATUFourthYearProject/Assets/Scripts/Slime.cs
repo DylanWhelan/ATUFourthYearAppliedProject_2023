@@ -4,31 +4,31 @@ using UnityEngine;
 
 public class Slime : MonoBehaviour
 {
-    private float scale;
-    private float speed;
-    private int generation;
+    private float _scale;
+    private float _speed;
+    private int _generation;
 
-    private float saturation = 30f;
+    private float _saturation;
 
-    private int numChildren;
+    private int _numChildren;
 
-    [SerializeField] private float[] inputsToNeural = new float [5];
-    [SerializeField] private float[] outputsOfNeural = new float [2];
+    [SerializeField] private float[] _inputsToNeural = new float [5];
+    [SerializeField] private float[] _outputsOfNeural = new float [2];
 
-    private SlimeInfo slimeInfo;
-    private NeuralNetwork neuralNetwork;
+    private SlimeInfo _slimeInfo;
+    private NeuralNetwork _neuralNetwork;
 
     private GameObject closestFood;
     // Start is called before the first frame update
     void Start()
     {
-        numChildren = 0;   
+        _numChildren = 0;   
     }
 
     // Update is called once per frame
     void Update()
     {
-        saturation -= 0.5f * scale * Time.deltaTime;
+        _saturation -= 0.5f * _scale * Time.deltaTime;
 
         if (closestFood == null) {
             GameObject [] foods = GameObject.FindGameObjectsWithTag("Food");
@@ -37,41 +37,37 @@ public class Slime : MonoBehaviour
             }
         }
 
-        /*if (closestFood != null) {
-            Jump(closestFood);
-        }*/
-
-        if (saturation < 0)
+        if (_saturation < 0)
         {
             Die();
         }
-        else if (saturation > 100f * scale)
+        else if (_saturation > 100f * _scale)
         {
             CreateChild();
         }
         // Represents slimes current hunger
-        inputsToNeural[0] = saturation / 50f - 1f;
+        _inputsToNeural[0] = _saturation / 50f - 1f;
         // Represents slimes size
-        inputsToNeural[1] = scale - 1f;
+        _inputsToNeural[1] = _scale - 1f;
         if (closestFood == null) {
             // Represents saturation of food
-            inputsToNeural[2] = -1f;
+            _inputsToNeural[2] = -1f;
             // Represents angle to food in pi radians
-            inputsToNeural[3] = -1f;
+            _inputsToNeural[3] = -1f;
             // represents distance to food
-            inputsToNeural[4] = 1f;
+            _inputsToNeural[4] = 1f;
         }
         else {
-            inputsToNeural[2] = 1f;
-            inputsToNeural[3] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position))) - 1;
-            inputsToNeural[4] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
+            _inputsToNeural[2] = 1f;
+            _inputsToNeural[3] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position))) - 1;
+            _inputsToNeural[4] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
         }
 
         try
         {
-            outputsOfNeural = neuralNetwork.FeedForward(inputsToNeural);
-            Rotate(outputsOfNeural[0]);
-            MoveForward(outputsOfNeural[1]);
+            _outputsOfNeural = _neuralNetwork.FeedForward(_inputsToNeural);
+            Rotate(_outputsOfNeural[0]);
+            MoveForward(_outputsOfNeural[1]);
         } catch (System.NullReferenceException)
         {
             Debug.Log("This can't" + name);
@@ -86,8 +82,8 @@ public class Slime : MonoBehaviour
     void MoveForward(float movementModifier) {
         if (movementModifier < 0) return;
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * speed * movementModifier * 1 *  Time.deltaTime);
-        saturation -= 1f * scale * speed * Time.deltaTime;
+        rb.AddForce(transform.forward * _speed * movementModifier * 1 *  Time.deltaTime);
+        _saturation -= 1f * _scale * _speed * Time.deltaTime;
     }
 
     GameObject NearestFood(GameObject [] foods)
@@ -111,73 +107,76 @@ public class Slime : MonoBehaviour
 
     void OnCollisionEnter(Collision collider) {
         if (collider.transform.name.Contains("Food")) {
-            saturation += collider.transform.GetComponent<Food>().IsEaten();
+            _saturation += collider.transform.GetComponent<Food>().IsEaten();
             closestFood = null;
         }
     }
 
-    public void init(float slimeScale, float slimeSpeed)
+    public void Init(float slimeScale, float slimeSpeed)
     {
         SetScale(slimeScale);
-        this.speed = slimeSpeed;
-        this.generation = 0;
-        this.slimeInfo = new SlimeInfo(name, scale, speed);
-        this.neuralNetwork = new NeuralNetwork(new int[] { 5, 4, 4, 2 });
+        _speed = slimeSpeed;
+        _generation = 0;
+        _slimeInfo = new SlimeInfo(name, _scale, _speed);
+        _neuralNetwork = new NeuralNetwork(new int[] { 5, 4, 4, 2 });
+        _numChildren = 0;
     }
 
-    public void init(float slimeScale, float slimeSpeed, int generation, SlimeInfo parentSlime, NeuralNetwork neuralNetwork)
+    public void Init(float slimeScale, float slimeSpeed, int generation, SlimeInfo parentSlime, NeuralNetwork neuralNetwork)
     {
         SetScale(slimeScale);
-        this.speed = slimeSpeed;
-        this.generation = generation;
-        this.slimeInfo = new SlimeInfo(name, scale, speed, generation, parentSlime);
-        this.neuralNetwork = new NeuralNetwork(neuralNetwork);
+        _speed = slimeSpeed;
+        _generation = generation;
+        _slimeInfo = new SlimeInfo(name, _scale, _speed, generation, parentSlime);
+        _neuralNetwork = new NeuralNetwork(neuralNetwork);
+        _numChildren = 0;
     }
 
 
     public NeuralNetwork GetNeuralNetwork()
     {
-        return neuralNetwork;
+        return _neuralNetwork;
     }
 
     public void SetNeuralNetwork(NeuralNetwork neuralNetwork)
     {
-        this.neuralNetwork = new NeuralNetwork(neuralNetwork);
+        this._neuralNetwork = new NeuralNetwork(neuralNetwork);
     }
 
     public SlimeInfo GetSlimeInfo()
     {
-        return slimeInfo;
+        return _slimeInfo;
     }
 
     private void SetScale(float newScale)
     {
-        scale = newScale;
+        _scale = newScale;
+        _saturation = 50 * _scale;
         gameObject.transform.localScale = new Vector3(newScale, newScale, newScale);
     }
 
     public float GetScale()
     {
-        return scale;
+        return _scale;
     }
 
     public void SetSpeed(float newSpeed)
     {
-        speed = newSpeed;
+        _speed = newSpeed;
     }
 
     public float GetSpeed()
     {
-        return speed;
+        return _speed;
     }
 
     public int GetGeneration()
     {
-        return generation;
+        return _generation;
     }
     public float GetSaturation()
     {
-        return saturation;
+        return _saturation;
     }
 
     void Die()
@@ -188,13 +187,13 @@ public class Slime : MonoBehaviour
     void CreateChild()
     {
         Debug.Log(name + " has eaten enough to have a child!"); 
-        saturation = 50f * scale;
-        numChildren += 1;
+        _saturation = 50f * _scale;
+        _numChildren += 1;
         SlimeManager.Instance().CreateSlime(gameObject);
     }
     
     public int GetNumChildren()
     {
-        return numChildren;
+        return _numChildren;
     }
 }

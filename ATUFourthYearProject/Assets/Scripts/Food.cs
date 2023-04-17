@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class Food : MonoBehaviour
 {
-    private float saturation = 25f;
+    private float _saturation = 25f;
 
     public void SetSaturation(float newSaturation)
     {
-        saturation = newSaturation;
+        _saturation = newSaturation;
     }
 
     public float GetSaturation()
     {
-        return saturation;
+        return _saturation;
     }
 
     public float IsEaten()
     {
         Destroy(gameObject);
-        return saturation;
+        return _saturation;
     }
 }

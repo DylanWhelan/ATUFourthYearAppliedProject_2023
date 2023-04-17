@@ -5,26 +5,26 @@ using TMPro;
 
 public class TraitsDisplay : MonoBehaviour
 {
-    public TextMeshProUGUI traitOutput;
+    public TextMeshProUGUI _traitOutput;
 
-    Slime slime;
+    Slime _slime;
 
     void Update() {
-        if (slime != null) {
-            string text = "Slime: " + slime.name + "<br>Size: {0:2}<br>Saturation: {1:2}";
-            traitOutput.SetText(text, slime.GetScale(), slime.GetSaturation());
+        if (_slime != null) {
+            string text = "Slime: " + _slime.name + "<br>Size: {0:2}<br>Saturation: {1:2}";
+            _traitOutput.SetText(text, _slime.GetScale(), _slime.GetSaturation());
         }
         else
         {
-            traitOutput.text = "No slime selected";
+            _traitOutput.text = "No slime selected";
         }
     }
 
     public void UpdateStoredSlime() {
-        this.slime = null;
+        this._slime = null;
     }
 
     public void UpdateStoredSlime(Slime slime) {
-        this.slime = slime;
+        this._slime = slime;
     }
 }

@@ -4,16 +4,16 @@ using UnityEngine;
 
 public class SimulationManager : MonoBehaviour
 {
-    private static SimulationManager instance;
+    private static SimulationManager _instance;
     // Start is called before the first frame update
     void Awake()
     {
-        if (instance != null)
+        if (_instance != null)
         {
             Destroy(gameObject);
         }
 
-        instance = this;
+        _instance = this;
         Debug.Log(Application.persistentDataPath);
     }
 
@@ -25,6 +25,6 @@ public class SimulationManager : MonoBehaviour
 
     public SimulationManager GetInstance()
     {
-        return instance;
+        return _instance;
     }
 }
