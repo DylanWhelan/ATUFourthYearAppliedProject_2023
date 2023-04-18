@@ -250,7 +250,7 @@ CapsuleCollider:
   m_Radius: 0.3
   m_Height: 0.7
   m_Direction: 1
-  m_Center: {x: 0, y: 0.3, z: 0}
+  m_Center: {x: 0, y: 0.35, z: 0}
 --- !u!114 &1795025371332174997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -263,13 +263,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc4dc3b23ed7d1141a10edd801d106c2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputsToNeural:
+  _inputsToNeural:
   - 0
   - 0
   - 0
   - 0
   - 0
-  outputsOfNeural:
+  _outputsOfNeural:
   - 0
   - 0
 --- !u!1 &6683666098018840159

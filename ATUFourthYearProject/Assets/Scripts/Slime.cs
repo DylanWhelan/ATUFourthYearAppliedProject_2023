@@ -19,6 +19,7 @@ public class Slime : MonoBehaviour
     private NeuralNetwork _neuralNetwork;
 
     private GameObject closestFood;
+    private GameObject closestSlime;
     // Start is called before the first frame update
     void Start()
     {
@@ -31,9 +32,16 @@ public class Slime : MonoBehaviour
         _saturation -= 0.5f * _scale * Time.deltaTime;
 
         if (closestFood == null) {
-            GameObject [] foods = GameObject.FindGameObjectsWithTag("Food");
-            if (foods.Length != 0) {
-                closestFood = NearestFood(foods);
+            if (FoodManager.Instance().GetFoodList().Count != 0) {
+                closestFood = NearestObject(FoodManager.Instance().GetFoodList());
+            }
+        }
+
+        if (closestSlime == null)
+        {
+            if (SlimeManager.Instance().GetSlimeList().Count != 0)
+            {
+                closestSlime = NearestObject(SlimeManager.Instance().GetSlimeList());
             }
         }
 
@@ -86,23 +94,23 @@ public class Slime : MonoBehaviour
         _saturation -= 1f * _scale * _speed * Time.deltaTime;
     }
 
-    GameObject NearestFood(GameObject [] foods)
+    GameObject NearestObject(List<GameObject> objectList)
     {
-        GameObject closestFood = null;
+        GameObject closestObject = null;
         float closestSqrDistance = Mathf.Infinity;
         Vector3 currentPosition = transform.position;
-        foreach(GameObject food in foods)
+        foreach(GameObject objectToCheck in objectList)
         {
-            Vector3 directionToTarget = food.transform.position - currentPosition;
+            Vector3 directionToTarget = objectToCheck.transform.position - currentPosition;
             float sqrDistanceToTarget = directionToTarget.sqrMagnitude;
-            if (sqrDistanceToTarget < closestSqrDistance)
+            if (sqrDistanceToTarget < closestSqrDistance && objectToCheck != gameObject)
             {
                 closestSqrDistance = sqrDistanceToTarget;
-                closestFood = food;
+                closestObject = objectToCheck;
             }
             
         }
-        return closestFood;
+        return closestObject;
     }
 
     void OnCollisionEnter(Collision collider) {

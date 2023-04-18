@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SlimeManager : MonoBehaviour
@@ -41,6 +42,7 @@ public class SlimeManager : MonoBehaviour
 
     public void CreateSlime(GameObject parentSlime)
     {
+        // Generation of random coordinate near parent slime
         float xCoord = parentSlime.transform.position.x + UnityEngine.Random.Range(-2, 2);
         float zCoord = parentSlime.transform.position.z + UnityEngine.Random.Range(-2, 2);
         float orientation = UnityEngine.Random.Range(0f, 359f);
@@ -50,8 +52,6 @@ public class SlimeManager : MonoBehaviour
         //GameObject spawnedSlime = Instantiate(_slimeToSpawn, new Vector3(xCoord, 0.5f, zCoord), Quaternion.Euler(0f, orientation, 0f));
 
         GameObject spawnedSlime = _slimePool.GetPooledObject();
-        spawnedSlime.transform.position = new Vector3(xCoord, 0.75f, zCoord);
-        spawnedSlime.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
         Slime spawnedSlimeScript = spawnedSlime.GetComponent<Slime>();
 
         spawnedSlime.name = parentSlime.name + parentSlimeScript.GetNumChildren();
@@ -61,25 +61,37 @@ public class SlimeManager : MonoBehaviour
         SlimeInfo slimeInfo = parentSlimeScript.GetSlimeInfo();
         NeuralNetwork neuralNetwork = parentSlimeScript.GetNeuralNetwork();
         spawnedSlimeScript.Init(scale, speed, generation, slimeInfo, neuralNetwork);
+
+
+        spawnedSlime.transform.position = new Vector3(xCoord, 0.01f, zCoord);
+        spawnedSlime.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
     }
 
     public void CreateSlime(int i)
     {
+        // Generation of random coordinates
         float xCoord = UnityEngine.Random.Range(-35f, 35f);
         float zCoord = UnityEngine.Random.Range(-35f, 35f);
         float orientation = UnityEngine.Random.Range(0f, 359f);
+        
         GameObject spawnedSlime = _slimePool.GetPooledObject();
-        // Instantiate(_slimeToSpawn, new Vector3(xCoord, 0.6f, zCoord), Quaternion.Euler(0f, orientation, 0f));
+
         spawnedSlime.name = string.Format("Slime_{0:0000}", i);
         Slime spawnedSlimeScript = spawnedSlime.GetComponent<Slime>();
-
-        spawnedSlime.transform.position = new Vector3(xCoord, 0.75f, zCoord);
-        spawnedSlime.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
 
         float scale = (UnityEngine.Random.Range(0.5f, 2f));
         float speed = (UnityEngine.Random.Range(0.5f, 2f));
 
         spawnedSlimeScript.Init(scale, speed);
+
+
+        spawnedSlime.transform.position = new Vector3(xCoord, 0.01f  , zCoord);
+        spawnedSlime.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
+    }
+
+    public List<GameObject> GetSlimeList()
+    {
+        return _slimePool.GetPool();
     }
 
     public void DeactivateSlime(GameObject objectToDeactivate)

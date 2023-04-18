@@ -65,6 +65,11 @@ public class FoodManager : MonoBehaviour
         }
     }
 
+    public List<GameObject> GetFoodList()
+    {
+        return _foodPool.GetPool();
+    }
+
     public void DeactivateFood(GameObject objectToDeactivate)
     {
         _foodPool.DeactivateObject(objectToDeactivate);
