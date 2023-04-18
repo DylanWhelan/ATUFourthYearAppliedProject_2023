@@ -8,13 +8,15 @@ public class Slime : MonoBehaviour
     private float _speed;
     private int _generation;
 
+
     private float _saturation;
     private float _saturationIfEaten;
+    private bool _isAlive;
 
     private int _numChildren;
 
-    [SerializeField] private float[] _inputsToNeural = new float [6];
-    [SerializeField] private float[] _outputsOfNeural = new float [2];
+    [SerializeField] private float[] _inputsToNeural = new float[6];
+    [SerializeField] private float[] _outputsOfNeural = new float[2];
 
     private SlimeInfo _slimeInfo;
     private NeuralNetwork _neuralNetwork;
@@ -25,66 +27,75 @@ public class Slime : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _saturation -= 0.5f * _scale * Time.deltaTime;
-
-        if (closestFood == null) {
-            if (FoodManager.Instance().GetFoodList().Count != 0) {
-                closestFood = NearestObject(FoodManager.Instance().GetFoodList());
-            }
-        }
-
-        if (closestSlime == null)
+        if (_isAlive)
         {
-            if (SlimeManager.Instance().GetSlimeList().Count != 0)
+            _saturation -= 0.5f * _scale * Time.deltaTime;
+
+            if (closestFood == null)
             {
-                closestSlime = NearestObject(SlimeManager.Instance().GetSlimeList());
+                if (FoodManager.Instance().GetFoodList().Count != 0)
+                {
+                    closestFood = NearestObject(FoodManager.Instance().GetFoodList());
+                }
             }
-        }
 
-        if (_saturation < 0)
-        {
-            Die();
-        }
-        else if (_saturation > 100f * _scale)
-        {
-            CreateChild();
-        }
-        // Represents slimes current hunger
-        _inputsToNeural[0] = _saturation / 50f - 1f;
-        if (closestFood == null) {
-            // Represents saturation of food
-            _inputsToNeural[3] = -1f;
-            // Represents angle to food in pi radians
-            _inputsToNeural[4] = -1f;
-            // represents distance to food
-            _inputsToNeural[5] = 1f;
-        }
-        else {
-            _inputsToNeural[3] = 1f;
-            _inputsToNeural[4] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position))) - 1;
-            _inputsToNeural[5] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
-        }
+            if (closestSlime == null)
+            {
+                if (SlimeManager.Instance().GetSlimeList().Count != 0)
+                {
+                    closestSlime = NearestObject(SlimeManager.Instance().GetSlimeList());
+                }
+            }
 
-        try
-        {
+            if (_saturation < 0)
+            {
+                Die();
+            }
+            else if (_saturation > 100f * _scale)
+            {
+                CreateChild();
+            }
+            // Represents slimes current hunger
+            _inputsToNeural[0] = _saturation / 50f - 1f;
+            if (closestFood == null)
+            {
+                // Represents saturation of food
+                _inputsToNeural[3] = -1f;
+                // Represents angle to food in pi radians
+                _inputsToNeural[4] = -1f;
+                // represents distance to food
+                _inputsToNeural[5] = 1f;
+            }
+            else
+            {
+                _inputsToNeural[3] = 1f;
+                _inputsToNeural[4] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2)(closestFood.transform.position - transform.position))) - 1;
+                _inputsToNeural[5] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
+            }
             _outputsOfNeural = _neuralNetwork.FeedForward(_inputsToNeural);
             Rotate(_outputsOfNeural[0]);
             MoveForward(_outputsOfNeural[1]);
-        } catch (System.NullReferenceException)
-        {
-            Debug.Log("This can't" + name);
         }
-        
+        else
+        {
+            _saturationIfEaten -= 1f * Time.deltaTime;
+            if (_saturationIfEaten < 0)
+            {
+                SetInactive();
+            }
+        }
     }
 
-    void Rotate(float piRadian) {
+    void Rotate(float piRadian)
+    {
         transform.Rotate(transform.up, piRadian);
     }
 
-    void MoveForward(float movementModifier) {
+    void MoveForward(float movementModifier)
+    {
         if (movementModifier < 0) return;
         Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * _speed * movementModifier * 1 *  Time.deltaTime);
+        rb.AddForce(transform.forward * _speed * movementModifier * 1 * Time.deltaTime);
         _saturation -= 1f * _scale * _speed * Time.deltaTime;
     }
 
@@ -93,7 +104,7 @@ public class Slime : MonoBehaviour
         GameObject closestObject = null;
         float closestSqrDistance = Mathf.Infinity;
         Vector3 currentPosition = transform.position;
-        foreach(GameObject objectToCheck in objectList)
+        foreach (GameObject objectToCheck in objectList)
         {
             Vector3 directionToTarget = objectToCheck.transform.position - currentPosition;
             float sqrDistanceToTarget = directionToTarget.sqrMagnitude;
@@ -102,15 +113,30 @@ public class Slime : MonoBehaviour
                 closestSqrDistance = sqrDistanceToTarget;
                 closestObject = objectToCheck;
             }
-            
+
         }
         return closestObject;
     }
 
-    void OnCollisionEnter(Collision collider) {
-        if (collider.transform.name.Contains("Food")) {
-            _saturation += collider.transform.GetComponent<Food>().IsEaten();
+    void OnCollisionEnter(Collision collider)
+    {
+        if (!_isAlive)
+        {
+            return;
+        }
+        if (collider.gameObject.CompareTag("Food"))
+        {
+            _saturation += collider.gameObject.GetComponent<Food>().IsEaten();
             closestFood = null;
+        }
+        else if (collider.gameObject.CompareTag("Slime"))
+        {
+            Slime otherSlime = collider.gameObject.GetComponent<Slime>();
+            if (_scale > (otherSlime.GetScale() * 1.1f))
+            {
+                _saturation += collider.gameObject.GetComponent<Slime>().IsEaten();
+                Debug.Log(name + " has eaten " + collider.gameObject.name);
+            }
         }
     }
 
@@ -138,6 +164,9 @@ public class Slime : MonoBehaviour
     private void InitCommon()
     {
         _numChildren = 0;
+        _isAlive = true;
+
+        _saturationIfEaten = _saturation;
         // Setting neural inputs that persist for the life of the slime
         _inputsToNeural[1] = _scale;
         _inputsToNeural[2] = _speed;
@@ -163,6 +192,7 @@ public class Slime : MonoBehaviour
     {
         _scale = newScale;
         _saturation = 50 * _scale;
+        newScale = Mathf.Sqrt(newScale);
         gameObject.transform.localScale = new Vector3(newScale, newScale, newScale);
     }
 
@@ -190,19 +220,37 @@ public class Slime : MonoBehaviour
         return _saturation;
     }
 
+    public float GetSaturationIfEaten()
+    {
+        return _saturationIfEaten;
+    }
+
     void Die()
+    {
+        //SlimeManager.Instance().DeactivateSlime(gameObject);
+        Debug.Log(name + " would provide: " + _saturationIfEaten + " if eaten!");
+        _isAlive = false;
+    }
+
+    public float IsEaten()
+    {
+        SetInactive();
+        return _saturationIfEaten;
+    }
+
+    void SetInactive()
     {
         SlimeManager.Instance().DeactivateSlime(gameObject);
     }
 
     void CreateChild()
     {
-        Debug.Log(name + " has eaten enough to have a child!"); 
+        Debug.Log(name + " has eaten enough to have a child!");
         _saturation = 50f * _scale;
         _numChildren += 1;
         SlimeManager.Instance().CreateSlime(gameObject);
     }
-    
+
     public int GetNumChildren()
     {
         return _numChildren;
