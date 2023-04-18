@@ -9,10 +9,11 @@ public class Slime : MonoBehaviour
     private int _generation;
 
     private float _saturation;
+    private float _saturationIfEaten;
 
     private int _numChildren;
 
-    [SerializeField] private float[] _inputsToNeural = new float [5];
+    [SerializeField] private float[] _inputsToNeural = new float [6];
     [SerializeField] private float[] _outputsOfNeural = new float [2];
 
     private SlimeInfo _slimeInfo;
@@ -20,11 +21,6 @@ public class Slime : MonoBehaviour
 
     private GameObject closestFood;
     private GameObject closestSlime;
-    // Start is called before the first frame update
-    void Start()
-    {
-        _numChildren = 0;   
-    }
 
     // Update is called once per frame
     void Update()
@@ -55,20 +51,18 @@ public class Slime : MonoBehaviour
         }
         // Represents slimes current hunger
         _inputsToNeural[0] = _saturation / 50f - 1f;
-        // Represents slimes size
-        _inputsToNeural[1] = _scale - 1f;
         if (closestFood == null) {
             // Represents saturation of food
-            _inputsToNeural[2] = -1f;
-            // Represents angle to food in pi radians
             _inputsToNeural[3] = -1f;
+            // Represents angle to food in pi radians
+            _inputsToNeural[4] = -1f;
             // represents distance to food
-            _inputsToNeural[4] = 1f;
+            _inputsToNeural[5] = 1f;
         }
         else {
-            _inputsToNeural[2] = 1f;
-            _inputsToNeural[3] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position))) - 1;
-            _inputsToNeural[4] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
+            _inputsToNeural[3] = 1f;
+            _inputsToNeural[4] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2) (closestFood.transform.position - transform.position))) - 1;
+            _inputsToNeural[5] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
         }
 
         try
@@ -126,8 +120,8 @@ public class Slime : MonoBehaviour
         _speed = slimeSpeed;
         _generation = 0;
         _slimeInfo = new SlimeInfo(name, _scale, _speed);
-        _neuralNetwork = new NeuralNetwork(new int[] { 5, 4, 4, 2 });
-        _numChildren = 0;
+        _neuralNetwork = new NeuralNetwork(new int[] { 6, 4, 4, 2 });
+        InitCommon();
     }
 
     public void Init(float slimeScale, float slimeSpeed, int generation, SlimeInfo parentSlime, NeuralNetwork neuralNetwork)
@@ -137,7 +131,16 @@ public class Slime : MonoBehaviour
         _generation = generation;
         _slimeInfo = new SlimeInfo(name, _scale, _speed, generation, parentSlime);
         _neuralNetwork = new NeuralNetwork(neuralNetwork);
+        InitCommon();
+    }
+
+    // Things that need to be done regardless of constructor
+    private void InitCommon()
+    {
         _numChildren = 0;
+        // Setting neural inputs that persist for the life of the slime
+        _inputsToNeural[1] = _scale;
+        _inputsToNeural[2] = _speed;
     }
 
 
@@ -148,7 +151,7 @@ public class Slime : MonoBehaviour
 
     public void SetNeuralNetwork(NeuralNetwork neuralNetwork)
     {
-        this._neuralNetwork = new NeuralNetwork(neuralNetwork);
+        _neuralNetwork = new NeuralNetwork(neuralNetwork);
     }
 
     public SlimeInfo GetSlimeInfo()

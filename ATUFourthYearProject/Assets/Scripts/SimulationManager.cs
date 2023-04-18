@@ -20,10 +20,9 @@ public class SimulationManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
     }
 
-    public SimulationManager Instance()
+    public SimulationManager GetInstance()
     {
         return _instance;
     }

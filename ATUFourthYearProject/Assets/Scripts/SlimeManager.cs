@@ -26,7 +26,10 @@ public class SlimeManager : MonoBehaviour
 
     public void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space)) Debug.Log(_slimePool.Count);
+        if(_slimePool.Count == 0)
+        {
+            SpawnWave(_numToSpawn);
+        }
     }
 
     public void SpawnWave(int countToSpawn)
