@@ -56,7 +56,7 @@ public class FoodManager : MonoBehaviour
                 float orientation = UnityEngine.Random.Range(0f, 359f);
 
                 GameObject spawnedFood = _foodPool.GetPooledObject();
-                spawnedFood.transform.position = new Vector3(xCoord, 0.75f, zCoord);
+                spawnedFood.transform.position = new Vector3(xCoord, 0.15f, zCoord);
                 spawnedFood.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
 
                 spawnedFood.GetComponent<Food>().SetSaturation(25);

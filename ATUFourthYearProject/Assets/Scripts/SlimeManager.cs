@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+    using System.Collections.Generic;
 using UnityEngine;
 
 public class SlimeManager : MonoBehaviour
@@ -66,7 +66,7 @@ public class SlimeManager : MonoBehaviour
         spawnedSlimeScript.Init(scale, speed, generation, slimeInfo, neuralNetwork);
 
 
-        spawnedSlime.transform.position = new Vector3(xCoord, 0.01f, zCoord);
+        spawnedSlime.transform.position = new Vector3(xCoord, 0.05f, zCoord);
         spawnedSlime.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
     }
 
@@ -88,7 +88,7 @@ public class SlimeManager : MonoBehaviour
         spawnedSlimeScript.Init(scale, speed);
 
 
-        spawnedSlime.transform.position = new Vector3(xCoord, 0.01f  , zCoord);
+        spawnedSlime.transform.position = new Vector3(xCoord, 0.05f  , zCoord);
         spawnedSlime.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
     }
 

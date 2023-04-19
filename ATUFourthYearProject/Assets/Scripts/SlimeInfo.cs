@@ -8,7 +8,7 @@ public class SlimeInfo
     public float SlimeSize { get; }
     public float SlimeSpeed { get; }
     public int SlimeGeneration { get; }
-    private SlimeInfo ParentSlime { get; }
+    public SlimeInfo ParentSlime { get; }
 
     public SlimeInfo(string slimeName, float slimeSize, float slimeSpeed)
     {

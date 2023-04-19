@@ -8,6 +8,7 @@ public class Slime : MonoBehaviour
     private float _speed;
     private int _generation;
 
+    [SerializeField] private Rigidbody rb;
 
     private float _saturation;
     private float _saturationIfEaten;
@@ -21,8 +22,11 @@ public class Slime : MonoBehaviour
     private SlimeInfo _slimeInfo;
     private NeuralNetwork _neuralNetwork;
 
-    private GameObject closestFood;
-    private GameObject closestSlime;
+    private GameObject _closestFood;
+    private GameObject _closestSlime;
+
+    private float _foodCheckTimer;
+    private float _slimeCheckTimer;
 
     // Update is called once per frame
     void Update()
@@ -31,19 +35,21 @@ public class Slime : MonoBehaviour
         {
             _saturation -= 0.5f * _scale * Time.deltaTime;
 
-            if (closestFood == null)
+            if (_closestFood == null)
             {
-                if (FoodManager.Instance().GetFoodList().Count != 0)
+                if (FoodManager.Instance().GetFoodList().Count != 0 || _foodCheckTimer > 3f)
                 {
-                    closestFood = NearestObject(FoodManager.Instance().GetFoodList());
+                    _closestFood = NearestObject(FoodManager.Instance().GetFoodList());
+                    _foodCheckTimer = 0;
                 }
             }
 
-            if (closestSlime == null)
+            if (_closestSlime == null || _slimeCheckTimer > 3f)
             {
                 if (SlimeManager.Instance().GetSlimeList().Count != 0)
                 {
-                    closestSlime = NearestObject(SlimeManager.Instance().GetSlimeList());
+                    _closestSlime = NearestObject(SlimeManager.Instance().GetSlimeList());
+                    _slimeCheckTimer = 0;
                 }
             }
 
@@ -57,20 +63,62 @@ public class Slime : MonoBehaviour
             }
             // Represents slimes current hunger
             _inputsToNeural[0] = _saturation / 50f - 1f;
-            if (closestFood == null)
+            if (_closestFood == null)
             {
-                // Represents saturation of food
+                // Represents saturation of food, -1 if null
                 _inputsToNeural[3] = -1f;
-                // Represents angle to food in pi radians
-                _inputsToNeural[4] = -1f;
-                // represents distance to food
+                // Represents angle to food in pi radians, 0 if null
+                _inputsToNeural[4] = 0;
+                // represents distance to food, 1 if null
                 _inputsToNeural[5] = 1f;
             }
             else
             {
-                _inputsToNeural[3] = 1f;
-                _inputsToNeural[4] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2)(closestFood.transform.position - transform.position))) - 1;
-                _inputsToNeural[5] = Mathf.Clamp((Vector3.Distance(closestFood.transform.position, transform.position) / 25f - 1f), -1f, 1f);
+                // Represents saturation of food, -0.5f due to following formula
+                // value = (saturation / 50) - 1, so for food which has default 25 = -0.5f
+                _inputsToNeural[3] = -0.5f;
+                // Represents angle of food relative to slime in pi radians to fit in with scheme of inputs being -1 to 1,
+                // Negative values are on the left side, positive values are on the right
+                _inputsToNeural[4] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2)(_closestFood.transform.position - transform.position))) - 1;
+                // Represents distance to food from slime, with values between -1 and 1,
+                // And distance greater than 25 is capped at an input value of 1
+                _inputsToNeural[5] = Mathf.Clamp((Vector3.Distance(_closestFood.transform.position, transform.position) / 12.5f) - 1f, -1f, 1f);
+            }
+            if (_closestSlime == null)
+            {
+                // Represents scale of closestSlime, -1 if null
+                _inputsToNeural[6] = -1f;
+                // Represents speed of closestSlime, -1 if null
+                _inputsToNeural[7] = -1f;
+                // Represents angle to closestSlime, 0 if null
+                _inputsToNeural[8] = 0f;
+                // Represents distance to closestSlime,
+                _inputsToNeural[9] = 1f;
+                // Represents saturation value of closestSlime, -1 if null
+                _inputsToNeural[10] = -1f;
+                // Represents status of closestSlime, -1 if null
+                _inputsToNeural[11] = -1f;
+            }
+            else
+            {
+                Slime closestSlimeScript = _closestSlime.GetComponent<Slime>();
+                // Represents scale of closestSlime, values are clamped between 0.5 and 2 typically
+                // So take away one to fit within established scheme for neural net inputs
+                _inputsToNeural[6] = closestSlimeScript.GetScale() - 1;
+                // Represents speed of closestSlime, values are clamped between 0.5 and 2 typically
+                // So take away one to fit within established scheme for neural net inputs
+                _inputsToNeural[7] = closestSlimeScript.GetSpeed() - 1;
+                // Represents angle of closestSlime relative to slime in pi radians to fit in with scheme of inputs being -1 to 1,
+                // Negative values are on the left side, positive values are on the right
+                _inputsToNeural[8] = (Mathf.Deg2Rad * Vector2.Angle(transform.forward, (Vector2)(_closestSlime.transform.position - transform.position))) - 1;
+                // Represents distance to closestSlime from slime, with values between -1 and 1,
+                // And distance greater than 25 is capped at an input value of 1
+                _inputsToNeural[9] = Mathf.Clamp((Vector3.Distance(_closestFood.transform.position, transform.position) / 12.5f) - 1f, -1f, 1f);
+                // Represents saturation value of closestSlime, calculated with following formula,
+                // input = (saturationIfEaten / 50) = 1
+                _inputsToNeural[10] = (closestSlimeScript.GetSaturationIfEaten() / 50f) - 1;
+                // Represents status of closestSlime, 0 if dead, 1 if alive
+                _inputsToNeural[11] = closestSlimeScript.IsAlive() ? 1 : 0;
             }
             _outputsOfNeural = _neuralNetwork.FeedForward(_inputsToNeural);
             Rotate(_outputsOfNeural[0]);
@@ -88,15 +136,17 @@ public class Slime : MonoBehaviour
 
     void Rotate(float piRadian)
     {
-        transform.Rotate(transform.up, piRadian);
+        //transform.Rotate(transform.up, piRadian);
+        transform.Rotate(Vector3.up, piRadian * Mathf.Rad2Deg * Time.deltaTime);    
+        Vector3 projectedForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
+        transform.rotation = Quaternion.LookRotation(projectedForward, Vector3.up);
     }
 
     void MoveForward(float movementModifier)
     {
         if (movementModifier < 0) return;
-        Rigidbody rb = GetComponent<Rigidbody>();
-        rb.AddForce(transform.forward * _speed * movementModifier * 1 * Time.deltaTime);
-        _saturation -= 1f * _scale * _speed * Time.deltaTime;
+        rb.AddForce(transform.forward * _speed * movementModifier * 5 * Time.deltaTime, ForceMode.VelocityChange);
+        _saturation -= 0.5f * _scale * _speed * Time.deltaTime;
     }
 
     GameObject NearestObject(List<GameObject> objectList)
@@ -127,7 +177,7 @@ public class Slime : MonoBehaviour
         if (collider.gameObject.CompareTag("Food"))
         {
             _saturation += collider.gameObject.GetComponent<Food>().IsEaten();
-            closestFood = null;
+            _closestFood = null;
         }
         else if (collider.gameObject.CompareTag("Slime"))
         {
@@ -135,7 +185,6 @@ public class Slime : MonoBehaviour
             if (_scale > (otherSlime.GetScale() * 1.1f))
             {
                 _saturation += collider.gameObject.GetComponent<Slime>().IsEaten();
-                Debug.Log(name + " has eaten " + collider.gameObject.name);
             }
         }
     }
@@ -146,7 +195,7 @@ public class Slime : MonoBehaviour
         _speed = slimeSpeed;
         _generation = 0;
         _slimeInfo = new SlimeInfo(name, _scale, _speed);
-        _neuralNetwork = new NeuralNetwork(new int[] { 6, 4, 4, 2 });
+        _neuralNetwork = new NeuralNetwork(new int[] { 12, 4, 4, 2 });
         InitCommon();
     }
 
@@ -225,9 +274,13 @@ public class Slime : MonoBehaviour
         return _saturationIfEaten;
     }
 
+    public bool IsAlive()
+    {
+        return _isAlive;
+    }
+
     void Die()
     {
-        //SlimeManager.Instance().DeactivateSlime(gameObject);
         Debug.Log(name + " would provide: " + _saturationIfEaten + " if eaten!");
         _isAlive = false;
     }
@@ -245,7 +298,6 @@ public class Slime : MonoBehaviour
 
     void CreateChild()
     {
-        Debug.Log(name + " has eaten enough to have a child!");
         _saturation = 50f * _scale;
         _numChildren += 1;
         SlimeManager.Instance().CreateSlime(gameObject);
