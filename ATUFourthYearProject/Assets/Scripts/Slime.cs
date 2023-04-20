@@ -145,7 +145,7 @@ public class Slime : MonoBehaviour
     void MoveForward(float movementModifier)
     {
         if (movementModifier < 0) return;
-        rb.AddForce(transform.forward * _speed * movementModifier * 5 * Time.deltaTime, ForceMode.VelocityChange);
+        rb.AddForce(transform.forward * _speed * movementModifier * 5 * Time.deltaTime, ForceMode.Acceleration);
         _saturation -= 0.5f * _scale * _speed * Time.deltaTime;
     }
 
@@ -281,7 +281,6 @@ public class Slime : MonoBehaviour
 
     void Die()
     {
-        Debug.Log(name + " would provide: " + _saturationIfEaten + " if eaten!");
         _isAlive = false;
     }
 

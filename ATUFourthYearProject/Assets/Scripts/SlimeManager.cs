@@ -4,6 +4,8 @@ using UnityEngine;
 public class SlimeManager : MonoBehaviour
 {
     static private SlimeManager _instance;
+    public int countingTheSlimes;
+    public List<GameObject> whatTheFuckIsHere;
     [SerializeField] private int _numToSpawn;
     [SerializeField] private GameObject _slimePrefab;
 
@@ -30,6 +32,8 @@ public class SlimeManager : MonoBehaviour
         {
             SpawnWave(_numToSpawn);
         }
+        countingTheSlimes = _slimePool.Count;
+        whatTheFuckIsHere = _slimePool.GetPool();
     }
 
     public void SpawnWave(int countToSpawn)
