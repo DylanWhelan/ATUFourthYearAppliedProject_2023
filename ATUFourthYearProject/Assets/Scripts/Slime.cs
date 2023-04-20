@@ -299,6 +299,7 @@ public class Slime : MonoBehaviour
     {
         _saturation = 50f * _scale;
         _numChildren += 1;
+        _slimeInfo.SlimeChildren = _numChildren;
         SlimeManager.Instance().CreateSlime(gameObject);
     }
 

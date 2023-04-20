@@ -2,29 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class TraitsDisplay : MonoBehaviour
 {
-    public TextMeshProUGUI _traitOutput;
+
+    [SerializeField] private GameObject _slimeStatsDisplay;
+    [SerializeField] private GameObject _slimeAncestryDisplay;
+
+    [SerializeField] private TextMeshProUGUI _name;
+    [SerializeField] private TextMeshProUGUI _scale;
+    [SerializeField] private TextMeshProUGUI _speed;
+    [SerializeField] private TextMeshProUGUI _numChildren;
+    [SerializeField] private TextMeshProUGUI _generation;
+    [SerializeField] private Slider _saturationSlider;
 
     Slime _slime;
 
     void Update() {
         if (_slime != null) {
-            string text = "Slime: " + _slime.name + "<br>Size: {0:2}<br>Saturation: {1:2}";
-            _traitOutput.SetText(text, _slime.GetScale(), _slime.GetSaturation());
-        }
-        else
-        {
-            _traitOutput.text = "No slime selected";
+            _saturationSlider.value = _slime.GetSaturation() / _slime.GetScale();
         }
     }
 
     public void UpdateStoredSlime() {
-        this._slime = null;
+        _slime = null;
+        _slimeStatsDisplay.SetActive(false);
+        _slimeAncestryDisplay.SetActive(false);
     }
 
     public void UpdateStoredSlime(Slime slime) {
-        this._slime = slime;
+        _slime = slime;
+        _slimeStatsDisplay.SetActive(true);
+        _slimeAncestryDisplay.SetActive(true);
+        _name.SetText("Name: " + _slime.name);
+        _scale.SetText("Scale: {0:2}", _slime.GetScale());
+        _speed.SetText("Speed: {0:2}", _slime.GetSpeed());
+        _numChildren.SetText("Children: {0}", _slime.GetNumChildren());
+        _generation.SetText("Generation: {0}", _slime.GetGeneration());
     }
 }

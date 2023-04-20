@@ -8,6 +8,7 @@ public class SlimeInfo
     public float SlimeSize { get; }
     public float SlimeSpeed { get; }
     public int SlimeGeneration { get; }
+    public int SlimeChildren { get; set; }
     public SlimeInfo ParentSlime { get; }
 
     public SlimeInfo(string slimeName, float slimeSize, float slimeSpeed)
@@ -16,6 +17,7 @@ public class SlimeInfo
         SlimeSize = slimeSize;
         SlimeSpeed = slimeSpeed;
         SlimeGeneration = 0;
+        SlimeChildren = 0;
     }
 
     public SlimeInfo(string slimeName, float slimeSize, float slimeSpeed, int slimeGeneration, SlimeInfo parentSlime)
@@ -25,5 +27,6 @@ public class SlimeInfo
         SlimeSpeed = slimeSpeed;
         SlimeGeneration = slimeGeneration;
         ParentSlime = parentSlime;
+        SlimeChildren = 0;
     }
 }
