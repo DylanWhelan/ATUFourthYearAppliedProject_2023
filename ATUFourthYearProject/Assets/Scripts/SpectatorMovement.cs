@@ -64,27 +64,26 @@ public class SpectatorMovement : MonoBehaviour
             _rotY = Mathf.Clamp(_rotY, -45, 45);
 
             transform.rotation = Quaternion.Euler(-_rotY, _rotX, 0);
-        }
-        
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            RaycastHit target;
-            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out target, 100f))
+            if (Input.GetMouseButtonDown(0))
             {
-                if (target.transform.name.Contains("Slime"))
+                RaycastHit target;
+                if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out target, 100f))
                 {
-                    traitsDisplay.UpdateStoredSlime(target.transform.GetComponent<Slime>());
+                    if (target.transform.name.Contains("Slime"))
+                    {
+                        traitsDisplay.UpdateStoredSlime(target.transform.GetComponent<Slime>());
+                    }
+                    else
+                    {
+                        traitsDisplay.UpdateStoredSlime();
+                    }
+
                 }
                 else
                 {
                     traitsDisplay.UpdateStoredSlime();
                 }
-                
-            }
-            else
-            {
-                   traitsDisplay.UpdateStoredSlime();
             }
         }
     }
