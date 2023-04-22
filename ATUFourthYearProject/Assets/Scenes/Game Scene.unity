@@ -490,9 +490,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _foodPrefab: {fileID: 1338551872051182345, guid: 6681790b6e61e934c99c6da399648a47, type: 3}
-  _foodCap: 100
+  _foodCap: 1000
   _foodPerInterval: 100
-  _spawningInterval: 15
+  _spawningInterval: 10
 --- !u!4 &136155554
 Transform:
   m_ObjectHideFlags: 0

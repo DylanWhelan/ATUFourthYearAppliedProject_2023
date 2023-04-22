@@ -5,12 +5,19 @@ using UnityEngine;
 
 public class NeuralNetwork
 {
-    [JsonProperty] private int[] _layers;//layers    
-    private float[][] _neurons;//neurons    
-    [JsonProperty] private float[][] _biases;//biasses    
+    // specifices the dimensions of layers for the neural network
+    [JsonProperty] private int[] _layers;
+    // 2 dimensional array containing the neurons of the network
+    private float[][] _neurons;
+    // 2 dimensional array containing the biases of the neural network
+    [JsonProperty] private float[][] _biases;
+    // 3 dimensional array containing the weights of the neural network
     [JsonProperty] private float[][][] _weights;//weights
+
+    // simple constructor for neural network, takes a 1 dimensional int array containing the dimensions of the neural network
     public NeuralNetwork(int[] layers)
     {
+        // Set local layers variable to passed in layers parameter
         _layers = new int[layers.Length];
         for (int i = 0; i < layers.Length; i++)
         {
@@ -19,16 +26,15 @@ public class NeuralNetwork
         InitNeurons();
         InitBiases();
         InitWeights();
-        Mutate(10, 0.02f);
     }
 
     public NeuralNetwork(NeuralNetwork otherNetwork)
     {
-        // Copy layers
+        // Set this layers instance to layers from other network
         _layers = new int[otherNetwork._layers.Length];
         Array.Copy(otherNetwork._layers, _layers, otherNetwork._layers.Length);
 
-        // Copy neurons
+        // Copy neurons from otherNetwork instance to this one
         _neurons = new float[otherNetwork._neurons.Length][];
         for (int i = 0; i < otherNetwork._neurons.Length; i++)
         {
@@ -36,7 +42,7 @@ public class NeuralNetwork
             Array.Copy(otherNetwork._neurons[i], _neurons[i], otherNetwork._neurons[i].Length);
         }
 
-        // Copy biases
+        // Copy biases from otherNetwork instance to this one, is made more complicated by it being dimensional
         _biases = new float[otherNetwork._biases.Length][];
         for (int i = 0; i < otherNetwork._biases.Length; i++)
         {
@@ -44,26 +50,26 @@ public class NeuralNetwork
             Array.Copy(otherNetwork._biases[i], _biases[i], otherNetwork._biases[i].Length);
         }
 
-        // Copy weights
+        // Copy weights from other network instance to this one, is most complicated because it's 3 dimensional
         _weights = new float[otherNetwork._weights.Length][][];
         for (int i = 0; i < otherNetwork._weights.Length; i++)
         {
             _weights[i] = new float[otherNetwork._weights[i].Length][];
             for (int j = 0; j < otherNetwork._weights[i].Length; j++)
             {
+                // The inner array is copied, as with c#, the Copy method doesn't work properly with multi dimension arrays
                 _weights[i][j] = new float[otherNetwork._weights[i][j].Length];
                 Array.Copy(otherNetwork._weights[i][j], _weights[i][j], otherNetwork._weights[i][j].Length);
             }
         }
 
-        Mutate(10, 0.02f);
+        //Mutate(SimulationManager.Instance().MutationChance, SimulationManager.Instance().mutationValue);
+        Mutate(30, 0.05f);
 
         string jsoned = JsonConvert.SerializeObject(this);
-        Debug.Log("We got to here!");
-        Debug.Log(jsoned);
     }
 
-    //create empty storage array for the neurons in the network.
+    //create empty storage array for the neurons in the network, neurons store the values calculated durind the FeedForward method
     private void InitNeurons()
     {
         List<float[]> neuronsList = new List<float[]>();
@@ -74,7 +80,7 @@ public class NeuralNetwork
         _neurons = neuronsList.ToArray();
     }
 
-    //initializes and populates array for the biases being held within the network.
+    //initializes and populates array for the biases being held within the network, biases act as flat modifiers to the values calculated in neurons
     private void InitBiases()
     {
         List<float[]> biasList = new List<float[]>();
@@ -148,7 +154,7 @@ public class NeuralNetwork
         {
             for (int j = 0; j < _biases[i].Length; j++)
             {
-                _biases[i][j] = (UnityEngine.Random.Range(0f, chance) <= 5) ? _biases[i][j] += UnityEngine.Random.Range(-val, val) : _biases[i][j];
+                _biases[i][j] = (UnityEngine.Random.Range(0f, 100) > chance) ? _biases[i][j] += UnityEngine.Random.Range(-val, val) : _biases[i][j];
             }
         }
 
@@ -158,7 +164,7 @@ public class NeuralNetwork
             {
                 for (int k = 0; k < _weights[i][j].Length; k++)
                 {
-                    _weights[i][j][k] = (UnityEngine.Random.Range(0f, chance) <= 5) ? _weights[i][j][k] += UnityEngine.Random.Range(-val, val) : _weights[i][j][k];
+                    _weights[i][j][k] = (UnityEngine.Random.Range(0f, 100) > chance) ? _weights[i][j][k] += UnityEngine.Random.Range(-val, val) : _weights[i][j][k];
 
                 }
             }

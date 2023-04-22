@@ -11,6 +11,7 @@ public class InfoListItem : MonoBehaviour
     [SerializeField] TextMeshProUGUI _numChildren;
     [SerializeField] TextMeshProUGUI _generation;
 
+    // Sets the text boxes for the info prefab
    public void init(SlimeInfo slimeInfo)
     {
         _name.SetText("Name: " + slimeInfo.SlimeName);

@@ -145,7 +145,13 @@ public class Slime : MonoBehaviour
     void MoveForward(float movementModifier)
     {
         if (movementModifier < 0) return;
-        rb.AddForce(transform.forward * _speed * movementModifier * 5 * Time.deltaTime, ForceMode.Acceleration);
+        //rb.AddForce(transform.forward * _speed * movementModifier * 5 * Time.deltaTime, ForceMode.Acceleration);
+        transform.position += transform.forward * _speed * movementModifier * Time.deltaTime;
+
+        /*
+         * Vector3 movementDirection = transform.forward * _verticalMovement + transform.right * _horizontalMovement + transform.up * y;
+            transform.position += movementDirection * _speed * _speedMultiplier * Time.deltaTime;
+         */
         _saturation -= 0.5f * _scale * _speed * Time.deltaTime;
     }
 
