@@ -17,6 +17,8 @@ public class SlimeManager : MonoBehaviour
     // objectPool containing all of the slimes
     [SerializeField] private ObjectPool _slimePool;
 
+    private int _slimeCount;
+
     void Awake()
     {
         // Unlikely necessary but important to ensure single instance of singleton
@@ -32,7 +34,7 @@ public class SlimeManager : MonoBehaviour
         _slimePool = new ObjectPool(_slimePrefab);
 
         // Initial spawnWave
-        SpawnWave(_numToSpawn);
+        SpawnWave(SimulationManager.Instance().SlimesToSpawn);
     }
 
     public void Update()
@@ -40,7 +42,7 @@ public class SlimeManager : MonoBehaviour
         // If there are an insufficient number of slimes, spawn a new wave
         if(_slimePool.Count == 15)
         {
-            SpawnWave(_numToSpawn);
+            SpawnWave(SimulationManager.Instance().SlimesToSpawn);
         }
 
         // Variables for debugging in editor
@@ -53,7 +55,7 @@ public class SlimeManager : MonoBehaviour
     {
         for (int i = 0; i < countToSpawn; i++)
         {
-            CreateSlime(i);
+            CreateSlime();
         }
     }
 
@@ -74,11 +76,11 @@ public class SlimeManager : MonoBehaviour
         GameObject spawnedSlime = _slimePool.GetPooledObject();
         Slime spawnedSlimeScript = spawnedSlime.GetComponent<Slime>();
 
-        spawnedSlime.name = parentSlime.name + parentSlimeScript.GetNumChildren();
+        spawnedSlime.name = string.Format("Slime_{0:00000}", _slimeCount++);
 
         // Stats of slime are inherited from parent and slightly modified
-        float scale = Mathf.Clamp(parentSlimeScript.GetScale() + UnityEngine.Random.Range(-0.01f, 0.01f), 0.5f, 2f);
-        float speed = Mathf.Clamp(parentSlimeScript.GetSpeed() + UnityEngine.Random.Range(-0.01f, 0.01f), 0.5f, 2f);
+        float scale = Mathf.Clamp(parentSlimeScript.GetScale() + UnityEngine.Random.Range(-SimulationManager.Instance().ScaleChange, SimulationManager.Instance().ScaleChange), SimulationManager.Instance().ScaleLowerBound, SimulationManager.Instance().ScaleUpperBound);
+        float speed = Mathf.Clamp(parentSlimeScript.GetSpeed() + UnityEngine.Random.Range(-SimulationManager.Instance().SpeedChange, SimulationManager.Instance().SpeedChange), SimulationManager.Instance().SpeedLowerBound, SimulationManager.Instance().SpeedUpperBound);
 
         // generation = parents generation + 1
         int generation = parentSlimeScript.GetGeneration() + 1;
@@ -97,7 +99,7 @@ public class SlimeManager : MonoBehaviour
         spawnedSlime.transform.rotation = Quaternion.Euler(0f, orientation, 0f);
     }
 
-    public void CreateSlime(int i)
+    public void CreateSlime()
     {
         // Generation of random coordinates
         float xCoord = UnityEngine.Random.Range(-35f, 35f);
@@ -107,11 +109,14 @@ public class SlimeManager : MonoBehaviour
         // object is either spawned or reactivated using object pool method
         GameObject spawnedSlime = _slimePool.GetPooledObject();
 
-        spawnedSlime.name = string.Format("Slime_{0:0000}", i);
+        spawnedSlime.name = string.Format("Slime_{0:00000}", _slimeCount++);
         Slime spawnedSlimeScript = spawnedSlime.GetComponent<Slime>();
 
-        float scale = UnityEngine.Random.Range(0.5f, 2f);
-        float speed = UnityEngine.Random.Range(0.5f, 2f);
+        //float scale = UnityEngine.Random.Range(0.5f, 2f);
+        //float speed = UnityEngine.Random.Range(0.5f, 2f);
+
+        float scale = UnityEngine.Random.Range(SimulationManager.Instance().ScaleLowerBound, SimulationManager.Instance().ScaleUpperBound);
+        float speed = UnityEngine.Random.Range(SimulationManager.Instance().SpeedLowerBound, SimulationManager.Instance().SpeedUpperBound);
 
         // pseudo constructor method for game object
         spawnedSlimeScript.Init(scale, speed);

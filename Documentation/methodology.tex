@@ -1,0 +1,35 @@
+\chapter{Methodology}
+\section{Development Methodology}
+I used Agile as my software development methodology. I have chosen Agile as it is a methodology that is very commonly used in the software industry and I felt that it was important to get experience with the methodology.
+\section{How Agile was used in this project}
+\par
+To follow the Agile methodology, I planned and tracked my work using an Agile board on Jira by Atlassian, to this end, I made a list of all the issues or items of work that I thought essential to finish, ordered in terms of priority and expected difficulty and then I added them all individually to the Jira backlog, and once they were in the backlog I then portioned out the different to sprints to plan out my approach to development in a more organized manner. The usage of the Agile board it easier to approach my work on the project as it gave me more clearly defined goals to work towards, as opposed to having more vague ideas as to how I wanted to fulfil my goals and develop my project. 
+\section{Research Methodology}
+For my research methodology, a great deal of the research I did was into different aspects of game development, particularly developing games on the Unity platform and hence the lion's share of the research I did was either through Unity documentation to uncover how to use different Unity native features, utilizing YouTube videos to educate myself on working to create a UI in Unity and I read a number of articles from the site Medium on the subject of developing games with Unity.
+For the more academic aspect of my research that being my research into the technologies I wanted to use for my project and their advantages and disadvantages relative to competitors I made use of Google Scholar to find academic sources where possible to back up my decisions and I also did research through forums and articles to get a more first-hand account of developers experiences with the different platforms.  
+\section{Version Control}
+\par
+For version control, I used GitHub to host my repository, as it was mandated by the college but also as it provided a very convenient solution to manage the different versions of my project, and provided the ability to revert changes that proved to negatively affect the project.
+\par
+The usage of GitHub for hosting the repository had another key advantage as it enabled me to easily work on the project both on my desktop and laptop, as I could easily ensure the versions of the project on both computers were in sync whenever I envisioned I would be performing the next part of work on a different device I would push the changes to the repository and then fetch them on the other computer.
+\subsection{Advantages of GitHub Desktop}
+\par
+I used GitHub Desktop as the tool for handling all interactions with the repository as though I am familiar with Git and handling pushing, pulling and fetching from the command line interface, I found that GitHub Desktop was more pleasant to use for the processes as it made much quicker and easier to see what changes there were made to the existing files in the repository before each commit. It made it much easier to quash merge conflicts, which was something I frequently had difficulty with when using Git.
+\section{Testing}
+\par
+Due to the limitations of the Unity Test Framework, I concluded that it would be unsuitable for use in my project. As such I resorted to employing only manual testing. All testing was done using White Box Testing as I performed all tests manually, considering each test concerning the source code and the particular functions or systems that were being tested.
+\par
+In the context of the project when I refer to White Box Testing, I mean that all testing was done with a close connection to the source code, including tests being done every time I changed how any of the in-game systems worked or whenever I introduced new systems to add more functionality to the project. I performed testing in this manner even though it was laborious as I wanted to ensure that all added features worked within the context of the project and that I wouldn't end up discovering further down the line that there were issues with certain aspects of the code that would require entire sections to be rewritten.
+\par
+The reasons that I judged the Unity Test Framework to be insufficient for the project were due to the many complex interactions present in a game environment which can't be satisfactorily tested using unit tests, in particular any interactions involving the Unity physics engine. There was also an issue in which many of the required tests would have been just as if not more difficult to write than the code being tested, particularly in the case of the multidimensional arrays which made up a large proportion of the work in developing the neural networks and which couldn't be easily tested due to how C\# handles multidimensional arrays.
+\par
+The disadvantages of my approach to testing were that manual testing was a rather slow process. It involved a great deal of time spent running and analyzing the game as it was running to ensure that all functions worked as expected and at certain points either due to insufficient attention on my part or a lack of consideration in what to look out for, certain bugs persisted after tests which I would only end up realizing much later, at that point taking more effort to solve the problems.
+\section{Development Environment}
+\par
+For my IDE I have chosen to use Visual Studio 2022 by Microsoft, Visual Studio includes a code editor which supports IntelliSense \cite{Intellisense}, a versatile code-completion aid, which can heavily boost a developers productivity by enabling the more write code more quickly, this also enables users to more easily keep track of parameters expected for methods or functions, and view any associated documentation enabling developers to stay focused and reduces the amount of hopping between windows or scripts that could be required while developing.
+\par
+Visual Studio also includes native support for C\# as C\# was originally designed by Microsoft. This support includes IntelliSense support for C\# native functionality such as built-in classes or functions and also the ability to compile code in C\#, the built-in compilation feature being the factor that separates an IDE like Visual Studio from a code editor like the very popular Visual Studio Code.
+\par
+Visual Studio is also easily configured due to the comprehensive install wizard, which fortunately for my own purposes contained a native package for development in Unity, including a debugger suited to Unity development alongside Unity-specific documentation and Intellisense packages, which sped up my development greatly as it enabled me to focus more directly on development.
+\par
+Another key advantage of Visual Studio which I only started to make use of later in my project was its support for GitHub Copilot which I found useful for writing code more quickly as it could easily deal with the more repetitive aspects of writing my game or refactoring code.

@@ -1,0 +1,10 @@
+# SlimeWorld - Dylan Whelan ATU Galway Final Year Project
+SlimeWorld is my final year project for the Applied Project and Minor Dissertation module for the Bsc (Hons) In Software Development at Atlantic Technological University Galway.
+## About Slimeworld
+SlimeWorld is a unity-based game which simulates the evolution of fantasy-esque slimes in a simple enironment. The slimes have traits, representing their size and speed which influence the rate at which they expend energy and their actions are controlled using neural networks. The various traits are inhertied by the slimes from their parents. The environment for the game also supports some modification and and customization through the settings menu.
+## How to use Slimeworld
+To download and use Slimeworld, first navigate to the releases tab an download the latest release, then copy the archive somewhere on your computer and extract it.Then you can simply run the game by using the executable inside the folder. Note to use run the game you will you need be using a Windows 64 bit installation like Windows 8 or newer.
+### Controls
+The controls for Slimeworld are relatively simple, in the game, WASD are used to control the horizontal movement of the spectator, while E and Q are used to control vertical movement. The shift key can be held down to increase the spectator's movement speed. The rotation of the spectator is done used mouse rotation, and to update the displayed slime's info, left click must be clicked.
+If the left mouse button is clicked while not moused over a slime, then the UI pertaining to slime stats on the left side is shut down, while if the button is clicked while aiming at a slime, the display instead displays that slime's stats.
+The user can click escape which will unlock the cursor, stopping any movement or rotation from the spectator and enabling the user to interact with the slime ancestry display through dragging or scrolling on the left side, and enabling them to use the menu on the right side which is accessed through clicking the gear icon.

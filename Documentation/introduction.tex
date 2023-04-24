@@ -1,0 +1,47 @@
+\chapter{Introduction}
+\section{About This Project}
+This project aims to create an environment to simulate the evolution of simple creatures, controlled by neural networks. The repository for the project can be found \href{https://github.com/DylanWhelan/ATUFourthYearAppliedProject_2023}{here} I have settled on this goal as I realize that neural networks as a concept are becoming an ever-more important tool to software engineers and also I personally find the subject of evolution interesting, as well as the ways it is shaped by the environment.
+\par
+The goals of the project Slime World are as follows:
+\par
+\begin{itemize}
+    \item To create a 2d plane for simulated life to live on.
+    \item To populate the plane with creatures which can eat, starve and procreate.
+    \item To include a system for the creatures to evolve throughout generations, passing traits along to their children.
+    \item To have the creatures controlled by neural networks which themselves are also honed through this evolutionary process.
+    \item To support multiple "species" of creatures, suited to different evolutionary niches
+    \item To create a tweakable environment which can affect the evolution of the creatures.
+\end{itemize}
+\par
+My criteria for success are the ability to simulate the life cycles and evolution of these creatures, while also being able to incorporate an artificially intelligent controller for the slimes based on a neural network, which after being shaped by their evolution through numerous generations, will also tailor itself towards whatever niche the creatures tend too.
+\par
+Another factor that would be important towards considering the project truly successful would be ensuring that there are not only creatures tailored towards one niche, i.e. that not all creatures would develop towards a very similar outline.
+\section{Description of the end-product}
+\par
+Slime World is a unity-based game, developed for the Windows platform which functions as a simulator for evolution on a very small scale. It simulates slime-like creatures in a 3d environment which live on a flat plane. These creatures have no inherent motivations being governed only by the emergent behaviours of a neural network, shaped by a manifestation of survival of the fittest, wherein the traits and behaviours that lead to successful reproduction will naturally spread and evolve as they last across generations.
+\par
+The simulation allows for the evolution of these creatures by providing the possibility for them to reproduce and have their traits inherited by their children. A creature's children will have traits inherited from their parents albeit slightly randomized,  The slow changes in inherited traits over generations provide the potential for evolution in the population.
+\par
+To emulate evolution more faithfully, there won't be any external motivations governing the evolution of the creatures. To this end, the evolution shall be purely random, with the hope that creatures with less ideal traits will be less likely to reproduce successfully and be selected out of the population, contrarily the more ideal traits will be more likely to reproduce as they will have an easier time getting an adequate amount of food to have children and avoid predation. In turn, it's expected that the same effect will be used to train the neural networks, with the slimes that display more effective behaviours in reaction to their environments, i.e. avoiding predators and efficiently finding food without expending too much energy.
+\par
+Hence the simulation adheres to a concept developed by 19Th century English biologist Herbert Spencer, "Survival of the fittest" \cite{spencer1866principles}, in this case not simply applying to the fittest organisms lasting to the longest, but rather that the traits best suited to spreading themselves, are those best suited to last throughout generations of evolution.
+\par
+The ability to tweak the settings governing both the environment and traits enables the user to see how different conditions can end up changing how evolution occurs, and what traits are selected for.
+\section{Inspiration for the project}
+\par
+I was inspired to do this project due to an interest in evolution and the factors that govern it. I thought it would be interesting to be able to see the process occur in real time and also to have an effect on it by manipulating different factors governing it. I was also heavily inspired by a video I have seen on the subject of simulated evolution, which can be found here \cite{primerNaturalSelection} which first opened my eyes to the possibilities of simulating evolution using a virtual environment. 
+\par
+I decided to incorporate genetic algorithms into the project, both on the advice of one of my lecturers, Dr. John Healy, and due to the facts that it both heavily suits a simulation based on evolution and it's something becoming ever more important in the software industry and I felt it was something important to learn about.
+\section{Chapters Overview}
+\begin{itemize}
+    \item \textbf{Chapter 2: Methodology}
+    \par The methodology chapter delves into the development methodologies that I chose to use in developing and testing this project alongside the different tools that I used to create the project such as my IDE and version control software.
+    \item \textbf{Chapter 3: Technology Review}
+    \par The technology review chapter delves into the research I did on the technologies that I decided to use in creating my project and why I decided to use them.
+    \item \textbf{Chapter 4: Design}
+    \par The Design chapter delves into the aspects of the system and its implementation in Unity, explaining how the various in-game systems work.
+    \item \textbf{Chapter 5: Evaluation}
+    \par The Evaluation Chapter compares how the end product compared with the goals I had initially set out with in making this project.
+    \item \textbf{Chapter 6: Conclusion}
+    \par The Conclusion Chapter follows on from the Evaluation in comparing to end state of the project to my initial goals and I talk about what I consider to be the biggest limitation in my approach.
+\end{itemize}

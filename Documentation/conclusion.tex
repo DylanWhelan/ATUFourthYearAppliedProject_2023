@@ -1,0 +1,37 @@
+\chapter{Conclusion}
+\section{Overview}
+This section is where I'll summarize the goals of my project and how I feel my project performed as regards meeting them, I will also discuss what I think was the biggest flaw in my project as regards approaching these goals.
+\section{Goals}
+\begin{itemize}
+    \item To create a 2d plane for simulated life to live on.
+    \par
+    I feel that this goal was met satisfactorily.
+    \item To populate the plane with creatures which can eat, starve and procreate.
+    \par
+    I feel that this goal was met satisfactorily.
+    \item To include a system for the creatures to evolve throughout generations, passing traits along to their children.
+    \par
+    I believe that this goal was achieved though not with the same level of depth as I'd desired.
+    \item To have the creatures controlled by neural networks which themselves are also honed through this evolutionary process.
+    \par
+    I believe the neural networks are the largest failure of the project so I will detail why further on in this chapter.
+    \item To support multiple "species" of creatures, suited to different evolutionary niches
+    \par
+    I believe that I have failed to achieve this goal as the environment created by the application was insufficiently complicated to provide ecological niches for slimes to shape themselves to and the slimes themselves were insufficiently intelligent.
+    \item To create a tweakable environment which can affect the evolution of the creatures.
+    \par
+    Though the end implementation of tweakable settings for governing the environment was done rather simply, I do feel that the settings as they are, work reasonably well within the system and I considered the goal satisfied.
+\end{itemize}
+\section{Faults with the Neural Network}
+\subsection{Inefficient Training Methodology}
+A big aspect of the inefficiency was the intentionally simplistic model in which the neural networks were trained, as utilizing more efficient methods like back-propagation in the training of the neural networks would have detracted from the goal of modelling evolution, by necessitating specific scorable criteria for the slimes which would need to be used to evaluate their relative fitness and hence the degree of change which should be made in the neural network.
+\par
+As while the training method implemented in the system is currently a very naive training method, which doesn't take anything into account regarding the performance of the neural network, I couldn't come up with a better method for training neural networks which didn't include any scorable or defined goals which would be used to measure it's performance.
+\subsection{Rigid nature of Neural Network}
+However, what I think was actually the larger shortcoming of the neural network was that despite the free-form nature of neural networks in that the ways they process data are undeniable but the main issue was actually with the rigid nature of the inputs. The inputs of the neural network govern its potential alongside a greatly increased training period with a larger amount of input nodes. 
+\par
+The manner in which this issue has manifested in the project has actually been in regard to how the slimes track other entities, for as is seen in this code snippet \ref{lst:neuralNetworkOtherSlimes}, half of the neural network's inputs are dedicated to observing the information of just one other slime. And the most crucial downfall of this, is that no matter how refined the neural network would become, through potentially millions of cycles of training, it could never properly learn to tackle situations with multiple competing slimes as the slime can only ever perceive one other slime at a time.
+\par
+This is a fundamental issue with the neural network as I see no manner in which to attempt to solve the issue while keeping any aspects of the neural network as it is currently outside of retaining the 2 output nodes. Because should the developer decide to tackle this issue by providing additional sets of input nodes to handle more slimes, it will risk drowning out the other inputs of the neural network, and the number of slimes that could be tracked would still be rigidly defined by the size of the inputs.
+\par
+In Summary, the issue regarding the rigid nature of the neural network is that at least in the implementation that I have gone with, there is no way in which the input systems can be modified to work with a dynamic number of entities. Hence if I were to tackle this project again, the main differences I would make would be in regards to the topology of the neural network and performing far more research into the different forms of neural network or machine learning systems which can be made to more easily work alongside systems such as arrays or other lists of inputs.

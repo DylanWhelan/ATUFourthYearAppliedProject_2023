@@ -63,8 +63,8 @@ public class NeuralNetwork
             }
         }
 
-        //Mutate(SimulationManager.Instance().MutationChance, SimulationManager.Instance().mutationValue);
-        Mutate(30, 0.05f);
+        Mutate(SimulationManager.Instance().MutationChance, SimulationManager.Instance().MutationValue);
+        //Mutate(30, 0.05f);
 
         string jsoned = JsonConvert.SerializeObject(this);
     }
@@ -118,7 +118,6 @@ public class NeuralNetwork
             weightsList.Add(layerWeightsList.ToArray());
         }
         _weights = weightsList.ToArray();
-        Debug.Log("Number of Weights in Neural Net" + numWeights);
     }
 
 
@@ -154,7 +153,7 @@ public class NeuralNetwork
         {
             for (int j = 0; j < _biases[i].Length; j++)
             {
-                _biases[i][j] = (UnityEngine.Random.Range(0f, 100) > chance) ? _biases[i][j] += UnityEngine.Random.Range(-val, val) : _biases[i][j];
+                _biases[i][j] = (UnityEngine.Random.Range(0f, 100) < chance) ? _biases[i][j] += UnityEngine.Random.Range(-val, val) : _biases[i][j];
             }
         }
 
@@ -164,7 +163,7 @@ public class NeuralNetwork
             {
                 for (int k = 0; k < _weights[i][j].Length; k++)
                 {
-                    _weights[i][j][k] = (UnityEngine.Random.Range(0f, 100) > chance) ? _weights[i][j][k] += UnityEngine.Random.Range(-val, val) : _weights[i][j][k];
+                    _weights[i][j][k] = (UnityEngine.Random.Range(0f, 100) < chance) ? _weights[i][j][k] += UnityEngine.Random.Range(-val, val) : _weights[i][j][k];
 
                 }
             }

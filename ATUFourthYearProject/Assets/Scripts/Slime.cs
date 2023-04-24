@@ -33,11 +33,14 @@ public class Slime : MonoBehaviour
     {
         if (_isAlive)
         {
+            // Simulates expenditure of calories from living
             _saturation -= 0.5f * _scale * Time.deltaTime;
 
-            if (_closestFood == null)
+            // If there is no closest food, or the timer has reached 3 seconds, find the closest food,
+            // Is done in case the closest food will have changed without being eaten
+            if (_closestFood == null || _foodCheckTimer > 3f)
             {
-                if (FoodManager.Instance().GetFoodList().Count != 0 || _foodCheckTimer > 3f)
+                if (FoodManager.Instance().GetFoodList().Count != 0)
                 {
                     _closestFood = NearestObject(FoodManager.Instance().GetFoodList());
                     _foodCheckTimer = 0;
@@ -53,10 +56,12 @@ public class Slime : MonoBehaviour
                 }
             }
 
+            // If the slime has starved set as dead
             if (_saturation < 0)
             {
                 Die();
             }
+            // If the slime has eaten enough to reproduce, create a child
             else if (_saturation > 100f * _scale)
             {
                 CreateChild();
@@ -120,10 +125,12 @@ public class Slime : MonoBehaviour
                 // Represents status of closestSlime, 0 if dead, 1 if alive
                 _inputsToNeural[11] = closestSlimeScript.IsAlive() ? 1 : 0;
             }
+            // use neural network to calculate outputs representing slimes decisions    
             _outputsOfNeural = _neuralNetwork.FeedForward(_inputsToNeural);
             Rotate(_outputsOfNeural[0]);
             MoveForward(_outputsOfNeural[1]);
         }
+        // If the slime is not alive, it will slowly lose saturationIfEaten until it is deactivated, to simulate rotting
         else
         {
             _saturationIfEaten -= 1f * Time.deltaTime;
@@ -134,27 +141,23 @@ public class Slime : MonoBehaviour
         }
     }
 
+    // Rotates the slime, piRadian is a value between -1 and 1 dictated by the neural network
     void Rotate(float piRadian)
     {
-        //transform.Rotate(transform.up, piRadian);
         transform.Rotate(Vector3.up, piRadian * Mathf.Rad2Deg * Time.deltaTime);    
         Vector3 projectedForward = Vector3.ProjectOnPlane(transform.forward, Vector3.up);
         transform.rotation = Quaternion.LookRotation(projectedForward, Vector3.up);
     }
 
+    // Moves the slime forward, movementModifier is a value between -1 and 1 dictated by the neural network
     void MoveForward(float movementModifier)
     {
         if (movementModifier < 0) return;
-        //rb.AddForce(transform.forward * _speed * movementModifier * 5 * Time.deltaTime, ForceMode.Acceleration);
         transform.position += transform.forward * _speed * movementModifier * Time.deltaTime;
-
-        /*
-         * Vector3 movementDirection = transform.forward * _verticalMovement + transform.right * _horizontalMovement + transform.up * y;
-            transform.position += movementDirection * _speed * _speedMultiplier * Time.deltaTime;
-         */
         _saturation -= 0.5f * _scale * _speed * Time.deltaTime;
     }
 
+    // Uses brute force algorithm to find the closest object in a list of objects
     GameObject NearestObject(List<GameObject> objectList)
     {
         GameObject closestObject = null;
@@ -176,15 +179,18 @@ public class Slime : MonoBehaviour
 
     void OnCollisionEnter(Collision collider)
     {
+        // if the slime is dead, do nothing
         if (!_isAlive)
         {
             return;
         }
+        // If lime collides with food, eat it
         if (collider.gameObject.CompareTag("Food"))
         {
             _saturation += collider.gameObject.GetComponent<Food>().IsEaten();
             _closestFood = null;
         }
+        // If slime collides with another slime, eat it if it is sufficiently smaller
         else if (collider.gameObject.CompareTag("Slime"))
         {
             Slime otherSlime = collider.gameObject.GetComponent<Slime>();
@@ -195,22 +201,27 @@ public class Slime : MonoBehaviour
         }
     }
 
+    // pseudo constructor, as classes that extend monobehaviours should not have constructors
     public void Init(float slimeScale, float slimeSpeed)
     {
         SetScale(slimeScale);
         _speed = slimeSpeed;
         _generation = 0;
+        // Attach a new SlimeInfo object to this slime
         _slimeInfo = new SlimeInfo(name, _scale, _speed);
-        _neuralNetwork = new NeuralNetwork(new int[] { 12, 4, 4, 2 });
+        _neuralNetwork = new NeuralNetwork(new int[] { 12, 8, 5, 2 });
         InitCommon();
     }
 
+    // pseudo constructor, used for slimes with parents
     public void Init(float slimeScale, float slimeSpeed, int generation, SlimeInfo parentSlime, NeuralNetwork neuralNetwork)
     {
         SetScale(slimeScale);
         _speed = slimeSpeed;
         _generation = generation;
+        // Attach a new SlimeInfo object to this slime, with parentSlime as the parent
         _slimeInfo = new SlimeInfo(name, _scale, _speed, generation, parentSlime);
+        // Pass in neural network, whcih shall be copied and then mutated
         _neuralNetwork = new NeuralNetwork(neuralNetwork);
         InitCommon();
     }
@@ -243,6 +254,7 @@ public class Slime : MonoBehaviour
         return _slimeInfo;
     }
 
+    // Sets scale of the slime, including it's physical scale, and sets the initial saturation of the slime
     private void SetScale(float newScale)
     {
         _scale = newScale;
@@ -285,22 +297,26 @@ public class Slime : MonoBehaviour
         return _isAlive;
     }
 
+    // Sets the boolean to false, so that the slime will act as if dead
     void Die()
     {
         _isAlive = false;
     }
 
+    // Method called when the slime is eaten, returns the saturation of the slime and deactivates it
     public float IsEaten()
     {
         SetInactive();
         return _saturationIfEaten;
     }
 
+    // Method called to use objectPool to deactivate the slime
     void SetInactive()
     {
         SlimeManager.Instance().DeactivateSlime(gameObject);
     }
 
+    // When the slime has eaten enough food, it will call the method to spawn a child slime
     void CreateChild()
     {
         _saturation = 50f * _scale;

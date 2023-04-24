@@ -8,16 +8,113 @@ public class SimulationManager : MonoBehaviour
 {
     private static SimulationManager _instance;
 
-    public int MutationChance { get; set; }
-    public float mutationValue { get; set; }
-
-    public float scaleChange { get; set; }
-    public float scaleLowerBound { get; set; }
-    public float scaleUpperBound { get; set; }
-
-    public float speedChange { get; set; }
-    public float speedLowerBound { get; set; }
-    public float speedUpperBound { get; set; }
+    private int _mutationChance;
+    public int MutationChance
+    {
+        get => _mutationChance;
+        set
+        {
+            _mutationChance = value;
+            PlayerPrefs.SetInt("MutationChance", value);
+        }
+    }
+    private float _mutationValue;
+    public float MutationValue {
+        get => _mutationValue;
+        set {
+            _mutationValue = value;
+            PlayerPrefs.SetFloat("MutationValue", value);
+        } 
+    }
+    private float _scaleChange;
+    public float ScaleChange {
+        get => _scaleChange;
+        set
+        {
+            _scaleChange = value;
+            PlayerPrefs.SetFloat("ScaleChange", value);
+        }
+    }
+    private float _scaleLowerBound;
+    public float ScaleLowerBound
+    {
+        get => _scaleLowerBound;
+        set
+        {
+            _scaleLowerBound = value;
+            PlayerPrefs.SetFloat("ScaleLowerBound", value);
+        }
+    }
+    private float _scaleUpperBound;
+    public float ScaleUpperBound
+    {
+        get => _scaleUpperBound;
+        set
+        {
+            _scaleUpperBound = value;
+            PlayerPrefs.SetFloat("ScaleUpperBound", value);
+        }
+    }
+    private float _speedChange;
+    public float SpeedChange
+    {
+        get => _speedChange;
+        set
+        {
+            _speedChange = value;
+            PlayerPrefs.SetFloat("SpeedChange", value);
+        }
+    }
+    private float _speedLowerBound;
+    public float SpeedLowerBound
+    {
+        get => _speedLowerBound;
+        set
+        {
+            _speedLowerBound = value;
+            PlayerPrefs.SetFloat("SpeedLowerBound", value);
+        }
+    }
+    private float _speedUpperBound;
+    public float SpeedUpperBound
+    {
+        get => _speedUpperBound;
+        set
+        {
+            _speedUpperBound = value;
+            PlayerPrefs.SetFloat("SpeedUpperBound", value);
+        }
+    }
+    private int _slimesToSpawn;
+    public int SlimesToSpawn
+    {
+        get => _slimesToSpawn;
+        set
+        {
+            _slimesToSpawn = value;
+            PlayerPrefs.SetInt("SlimesToSpawn", value);
+        }
+    }
+    private int _foodPerInterval;
+    public int FoodPerInterval
+    {
+        get => _foodPerInterval;
+        set
+        {
+            _foodPerInterval = value;
+            PlayerPrefs.SetInt("FoodPerInterval", value);
+        }
+    }
+    private int _foodCap;
+    public int FoodCap
+    {
+        get => _foodCap;
+        set
+        {
+            _foodCap = value;
+            PlayerPrefs.SetInt("FoodCap", value);
+        }
+    }
 
     // Start is called before the first frame update
     void Awake()
@@ -27,27 +124,23 @@ public class SimulationManager : MonoBehaviour
             Destroy(gameObject);
         }
         _instance = this;
-        Debug.Log(Application.persistentDataPath);
 
+        LoadPrefs();
+    }
 
-        string folderPath = Path.Combine(Application.persistentDataPath, "NeuralNetworks");
-        Debug.Log(folderPath);
-
-        if (!Directory.Exists(folderPath))
-        {
-            Debug.Log("There is no folder yet!");
-            Directory.CreateDirectory(folderPath);
-        }
-        else
-        {
-            Debug.Log("There is a new folder!");
-            string[] fileNames = Directory.GetFiles(folderPath);
-            Debug.Log(fileNames);
-            foreach (string file in fileNames)
-            {
-                Debug.Log(file);
-            }
-        }
+    public void LoadPrefs()
+    {
+        _mutationChance = PlayerPrefs.GetInt("MutationChance", 20);
+        _mutationValue = PlayerPrefs.GetFloat("MutationValue", 0.05f);
+        _scaleChange = PlayerPrefs.GetFloat("ScaleChange", 0.1f);
+        _scaleLowerBound = PlayerPrefs.GetFloat("ScaleLowerBound", 0.5f);
+        _scaleUpperBound = PlayerPrefs.GetFloat("ScaleUpperBound", 2f);
+        _speedChange = PlayerPrefs.GetFloat("SpeedChange", 0.1f);
+        _speedLowerBound = PlayerPrefs.GetFloat("SpeedLowerBound", 0.5f);
+        _speedUpperBound = PlayerPrefs.GetFloat("SpeedUpperBound", 2f);
+        _slimesToSpawn = PlayerPrefs.GetInt("SlimesToSpawn", 1000);
+        _foodPerInterval = PlayerPrefs.GetInt("FoodPerInterval", 100);
+        _foodCap = PlayerPrefs.GetInt("FoodCap", 1000);
     }
 
     public static SimulationManager Instance()

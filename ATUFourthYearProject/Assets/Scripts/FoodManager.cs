@@ -60,10 +60,10 @@ public class FoodManager : MonoBehaviour
     void SpawnFoods()
     {
         // the loop is ran for an amount of times indicated by foodPerInterval
-        for (int i = 0; i < _foodPerInterval; i++)
+        for (int i = 0; i < SimulationManager.Instance().FoodPerInterval; i++)
         {
             // if _foodPool count is greater than food count, don't spawn any food
-            if (_foodPool.Count < _foodCap)
+            if (_foodPool.Count < SimulationManager.Instance().FoodCap)
             {
                 // position of food is defined
                 float xCoord = UnityEngine.Random.Range(-35f, 35f);
